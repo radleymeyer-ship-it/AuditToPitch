@@ -2,16 +2,17 @@
 
 :root {
   color-scheme: dark;
-  --background: #030806;
-  --panel: #07130d;
-  --raised: #0b1b13;
+  --background: #07140f;
+  --panel: #0b1f17;
+  --raised: #0f2a1f;
   --line: #1c3629;
   --ink: #effff5;
   --muted: #96aa9e;
-  --mint: #00f5a0;
-  --mint-light: #95ffc5;
+  --mint: #1cf08c;
+  --mint-light: #7bf7bd;
   --lime: #c3ff6b;
-  --alert: #ff8066;
+  --alert: #ff5468;
+  --amber: #ffb23e;
   font-family: 'Segoe UI Variable', 'Segoe UI', sans-serif;
   font-size: 13px;
   letter-spacing: 0;
@@ -33,6 +34,7 @@
   --color-mint-light: var(--mint-light);
   --color-lime: var(--lime);
   --color-alert: var(--alert);
+  --color-amber: var(--amber);
 }
 
 #root {
@@ -66,6 +68,64 @@ p {
     radial-gradient(rgb(149 255 197 / 8%) 0.55px, transparent 0.55px);
   background-position: center top, 12px 12px;
   background-size: auto, 13px 13px;
+}
+
+.donut {
+  --p: 100;
+  --c: #ffb23e;
+  display: grid;
+  width: 88px;
+  height: 88px;
+  flex: none;
+  place-items: center;
+  border-radius: 50%;
+  background: conic-gradient(var(--c) calc(var(--p) * 1%), #16301f 0);
+}
+
+.donut::after {
+  content: attr(data-n);
+  display: grid;
+  width: 66px;
+  height: 66px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--panel);
+  color: var(--ink);
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.scan-window {
+  position: relative;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #041009;
+  padding: 12px 14px;
+  box-shadow: 0 0 0 1px rgb(28 240 140 / 25%) inset;
+}
+
+.scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 20%;
+  height: 3px;
+  background: var(--mint);
+  box-shadow: 0 0 22px 6px rgb(28 240 140 / 50%);
+  animation: scan 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes scan {
+  to {
+    top: 88%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scan-line {
+    animation: none;
+  }
 }
 
 @media print {

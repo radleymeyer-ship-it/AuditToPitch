@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Sparkles } from 'lucide-react'
 import { createSupabaseBrowserClient } from '@/lib/supabase/client'
+import styles from '@/app/dashboard/dashboard.module.css'
 
 export function UpgradeButton() {
 	const [isRedirecting, setIsRedirecting] = useState(false)
@@ -35,16 +35,10 @@ export function UpgradeButton() {
 
 	return (
 		<div>
-			<button
-				type="button"
-				onClick={handleUpgrade}
-				disabled={isRedirecting}
-				className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-brand px-5 text-sm font-bold text-[#03120a] transition hover:bg-brand-light disabled:cursor-wait disabled:opacity-60"
-			>
-				<Sparkles className="h-4 w-4" />
+			<button type="button" className={styles.btn} onClick={handleUpgrade} disabled={isRedirecting}>
 				{isRedirecting ? 'Redirecting...' : 'Get Pro for $39'}
 			</button>
-			{error && <p className="mt-2 text-sm text-alert" role="alert">{error}</p>}
+			{error && <p className={styles.error} role="alert">{error}</p>}
 		</div>
 	)
 }

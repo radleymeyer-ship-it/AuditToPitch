@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AuditToPitch Pro – Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#1cf08c; --green-d:#0f9f5c; --ink:#07140f; --ink2:#0b1f17;
+  --red:#ff5468; --amber:#ffb23e; --paper:#f7faf8; --mute:#6b7a73;
+  --font:'Poppins',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html{background:#1b1f1d}
+body{
+  font-family:var(--font);color:var(--ink);min-height:100vh;
+  background:linear-gradient(180deg,#dedfde 0,#cfd2d0 280px,#6f7a74 560px,#222826 820px,#1b1f1d 100%);
+  position:relative;
+}
+body::before{ /* poster grid */
+  content:"";position:absolute;inset:0 0 auto 0;height:640px;pointer-events:none;
+  background-image:linear-gradient(rgba(0,0,0,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.05) 1px,transparent 1px);
+  background-size:36px 36px;
+  -webkit-mask-image:linear-gradient(#000 40%,transparent);mask-image:linear-gradient(#000 40%,transparent);
+}
+.wrap{position:relative;max-width:1080px;margin:0 auto;padding:28px 24px 64px}
+:focus-visible{outline:3px solid var(--green);outline-offset:3px}
+
+/* header */
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:24px;letter-spacing:-.03em}
+.brand b{color:var(--green-d)}
+.logo{width:44px;height:44px;border-radius:12px;background:var(--ink);display:grid;place-items:center;box-shadow:0 0 0 2px var(--green) inset}
+.logo svg{width:24px;height:24px}
+.who{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500}
+.pill{background:var(--ink);color:var(--green);border-radius:999px;padding:8px 18px;font-weight:500;font-size:14px;border:0;font-family:inherit}
+button.pill{cursor:pointer;box-shadow:0 0 0 1.5px var(--green) inset}
+button.pill:hover{background:var(--green);color:var(--ink)}
+
+/* hero */
+.hero{padding:56px 0 40px;position:relative}
+.hero h1{font-size:clamp(40px,7vw,76px);line-height:1;letter-spacing:-.045em;font-weight:700}
+.hl{display:inline-block;margin-top:12px;background:var(--ink);color:var(--green);border-radius:20px;padding:6px 26px 12px;font-weight:800;box-shadow:0 14px 30px rgba(0,0,0,.25);transform:rotate(-.6deg)}
+.timer{position:absolute;right:0;bottom:28px;background:var(--green);border-radius:16px;padding:10px 20px;font-weight:700;font-size:22px;box-shadow:0 0 36px rgba(28,240,140,.55)}
+.timer s{opacity:.55;font-weight:600;margin-right:10px}
+.sub{margin-top:22px;font-size:17px;color:#2d3a34;max-width:46ch}
+
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:22px}
+.card{border-radius:28px;padding:28px}
+.dark{background:linear-gradient(160deg,var(--ink2),var(--ink));color:#e9fff4;box-shadow:0 0 0 1.5px rgba(28,240,140,.55) inset,0 24px 50px rgba(0,0,0,.35)}
+.light{background:var(--paper);box-shadow:0 20px 44px rgba(0,0,0,.28)}
+.card h2{font-size:20px;font-weight:700;letter-spacing:-.02em}
+.card p{font-size:14px;line-height:1.55}
+.dark p{color:#9fc4b2}.light p{color:var(--mute)}
+
+/* extension (tilted browser) */
+.ext{grid-column:span 12;display:grid;grid-template-columns:1fr 1.1fr;gap:28px;align-items:center;overflow:hidden;position:relative}
+.ext .btn{margin-top:20px}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--green);color:var(--ink);font:700 16px var(--font);padding:14px 26px;border-radius:16px;border:0;cursor:pointer;text-decoration:none;box-shadow:0 0 28px rgba(28,240,140,.4)}
+.btn:hover{filter:brightness(1.08)}
+.browser{transform:perspective(900px) rotateY(-8deg) rotate(-2deg);background:#041009;border-radius:18px;padding:12px 14px 18px;height:190px;position:relative;box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 20px 40px rgba(0,0,0,.5);overflow:hidden}
+.dots{display:flex;gap:6px;align-items:center;font-size:11px;color:#6d8c7e}
+.dots i{width:8px;height:8px;border-radius:50%;background:#1e3a2d}
+.dots span{margin-left:10px;background:#0b2217;border-radius:99px;padding:3px 12px}
+.bar{height:14px;border-radius:6px;background:#0d2519;margin-top:14px;width:60%}
+.scan{position:absolute;left:0;right:0;height:3px;background:var(--green);box-shadow:0 0 22px 6px rgba(28,240,140,.5);top:20%;animation:scan 3.2s ease-in-out infinite alternate}
+@keyframes scan{to{top:88%}}
+.chip{position:absolute;font-size:12px;font-weight:500;padding:6px 12px 6px 28px;border-radius:10px;background:#07140f;border:1.5px solid var(--red);color:#fff;white-space:nowrap}
+.chip::before{content:"";position:absolute;left:10px;top:50%;width:9px;height:9px;margin-top:-4.5px;border-radius:50%;background:var(--red)}
+.chip.a{border-color:var(--amber)}.chip.a::before{background:var(--amber)}
+.c1{right:10px;top:44px}.c2{left:14px;bottom:16px}.c3{right:34px;bottom:44px}
+
+/* usage + plan */
+.usage{grid-column:span 5;display:flex;gap:22px;align-items:center}
+.plan{grid-column:span 7;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;background:var(--green);color:var(--ink);border-radius:28px;padding:28px 32px;box-shadow:0 0 44px rgba(28,240,140,.35)}
+.plan h2{font-size:clamp(24px,3.4vw,34px);letter-spacing:-.035em;line-height:1.1}
+.plan p{color:#0b3a24;font-size:14px;margin-top:6px}
+.plan .btn{background:var(--ink);color:var(--green);box-shadow:none}
+.donut{--p:100;--c:var(--amber);width:104px;height:104px;border-radius:50%;flex:none;display:grid;place-items:center;
+  background:conic-gradient(var(--c) calc(var(--p)*1%),#dfe7e2 0)}
+.donut::after{content:attr(data-n);display:grid;place-items:center;width:78px;height:78px;border-radius:50%;background:var(--paper);font-weight:800;font-size:28px;color:var(--ink)}
+.donut.sm{width:56px;height:56px}.donut.sm::after{width:42px;height:42px;font-size:16px}
+.tag{display:inline-block;margin-top:10px;background:var(--ink);color:var(--green);font-size:12px;font-weight:500;border-radius:99px;padding:4px 12px}
+
+/* lists */
+.col{grid-column:span 6}
+.col h2{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.dark h2{color:var(--green)}
+.row{display:flex;align-items:center;gap:16px;padding:16px 0;border-top:1px dashed #cfd9d3}
+.row:first-of-type{border-top:0}
+.row b{display:block;font-size:15px;word-break:break-all}
+.row p{margin-top:2px}
+.row .go{margin-left:auto}
+.q{padding:16px 0;border-top:1px solid rgba(28,240,140,.2)}
+.q:first-of-type{border-top:0}
+.q b{display:block;font-size:14px;color:#fff;word-break:break-all}
+.q .hook{display:inline-block;font-size:11px;font-weight:600;color:var(--ink);background:var(--green);border-radius:6px;padding:2px 8px;margin:8px 0 6px}
+.q p{font-size:14px;color:#d4f5e4;font-style:italic}
+.q em{color:var(--green);font-style:normal;font-weight:600}
+
+@media(max-width:860px){
+  .ext{grid-template-columns:1fr}.usage,.plan,.col{grid-column:span 12}
+  .timer{position:static;display:inline-block;margin-top:20px}
+}
+@media(prefers-reduced-motion:reduce){.scan{animation:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#1cf08c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M10 9l5 3-5 3z" fill="#1cf08c"/></svg></div>
+      <span>AuditToPitch <b>Pro</b></span>
+    </div>
+    <div class="who">
+      <span>radleymeyer@gmail.com</span>
+      <span class="pill">Free</span>
+      <button class="pill">Sign out</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>Their site is leaking leads.<br><span class="hl">Audit it in 10 sec.</span></h1>
+    <div class="timer" aria-hidden="true"><s>90 min</s>00:10</div>
+    <p class="sub">Open a prospect's site, run the audit, and walk away with a PDF and a Loom script.</p>
+  </section>
+
+  <main class="grid">
+
+    <section class="card dark ext">
+      <div>
+        <h2>Connect the Chrome extension</h2>
+        <p style="margin-top:8px">Install it, sign in, and audit any prospect's site in one click.</p>
+        <a class="btn" href="#">Download / Connect Chrome extension</a>
+      </div>
+      <div class="browser" aria-hidden="true">
+        <div class="dots"><i></i><i></i><i></i><span>prospect-website.com</span></div>
+        <div class="bar"></div><div class="bar" style="width:38%"></div>
+        <div class="scan"></div>
+        <span class="chip c1">No GA4 or Meta Pixel</span>
+        <span class="chip a c3">Page speed 38/100</span>
+        <span class="chip c2">No meta description</span>
+      </div>
+    </section>
+
+    <section class="card light usage">
+      <div class="donut" data-n="3/3" style="--p:100"></div>
+      <div>
+        <h2>Audits used</h2>
+        <p>0 free audits remaining this month.</p>
+        <span class="tag">Free beta</span>
+      </div>
+    </section>
+
+    <section class="plan">
+      <div>
+        <h2>Unlimited audits.<br>Zero waiting.</h2>
+        <p>Upgrade from the free beta to keep pitching.</p>
+      </div>
+      <a class="btn" href="#">Get Pro for $39</a>
+    </section>
+
+    <section class="card light col">
+      <h2>Recent audits</h2>
+      <div class="row">
+        <div class="donut sm" data-n="59" style="--p:59;--c:var(--red)"></div>
+        <div><b>walkon.com</b><p>8 improvements found. Start with the missing Meta Pixel.</p></div>
+      </div>
+      <div class="row">
+        <div class="donut sm" data-n="82" style="--p:82;--c:var(--green-d)"></div>
+        <div><b>rj45.co.za/services</b><p>4 improvements found. Start with the missing Meta Pixel.</p></div>
+      </div>
+      <div class="row">
+        <div class="donut sm" data-n="82" style="--p:82;--c:var(--green-d)"></div>
+        <div><b>rj45.co.za</b><p>4 improvements found. Start with the missing Meta Pixel.</p></div>
+      </div>
+    </section>
+
+    <section class="card dark col">
+      <h2>▶ AI pitch scripts</h2>
+      <div class="q">
+        <b>walkon.com</b><span class="hook">Hook</span>
+        <p>“I took a quick look at WalkOn.com and noticed <em>meta pixel is not detected</em>…”</p>
+      </div>
+      <div class="q">
+        <b>rj45.co.za/services</b><span class="hook">Hook</span>
+        <p>“I took a quick look at Services – RJ45 and noticed <em>meta pixel is not detected</em>…”</p>
+      </div>
+      <div class="q">
+        <b>rj45.co.za</b><span class="hook">Hook</span>
+        <p>“I took a quick look at Home – RJ45 and noticed <em>meta pixel is not detected</em>…”</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>
