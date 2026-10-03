@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+:root {
+  --background: #030806;
+  --foreground: #effff5;
+  --brand: #00f5a0;
+  --brand-dark: #00bd78;
+  --brand-light: #95ffc5;
+  --signal-lime: #c3ff6b;
+  --ink: #effff5;
+  --muted: #96aa9e;
+  --surface: #07130d;
+  --surface-raised: #0b1b13;
+  --line: #1c3629;
+  --alert: #ff8066;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-light: var(--brand-light);
+  --color-signal-lime: var(--signal-lime);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-line: var(--line);
+  --color-alert: var(--alert);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  min-height: 100%;
+  background: var(--background);
+  color-scheme: dark;
+}
+
+body {
+  min-height: 100%;
+  background-color: var(--background);
+  background-image: radial-gradient(ellipse at 50% -18%, rgb(0 245 160 / 13%), transparent 48%),
+    linear-gradient(180deg, #030806 0%, #050c08 58%, #030806 100%);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), sans-serif;
+}
+

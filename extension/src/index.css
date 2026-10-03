@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --background: #030806;
+  --panel: #07130d;
+  --raised: #0b1b13;
+  --line: #1c3629;
+  --ink: #effff5;
+  --muted: #96aa9e;
+  --mint: #00f5a0;
+  --mint-light: #95ffc5;
+  --lime: #c3ff6b;
+  --alert: #ff8066;
+  font-family: 'Segoe UI Variable', 'Segoe UI', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0;
+  color: var(--ink);
+  background: var(--background);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@theme inline {
+  --color-panel: var(--panel);
+  --color-raised: var(--raised);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-mint: var(--mint);
+  --color-mint-light: var(--mint-light);
+  --color-lime: var(--lime);
+  --color-alert: var(--alert);
+}
+
+#root {
+  box-sizing: border-box;
+  width: 380px !important;
+  height: 500px !important;
+  max-width: none !important;
+  min-height: 500px !important;
+  margin: 0 !important;
+  border: 0 !important;
+  text-align: left;
+}
+
+body {
+  width: 380px;
+  height: 500px;
+  margin: 0;
+  overflow: hidden;
+  background: var(--background);
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+.audit-popup {
+  background-color: var(--background);
+  background-image: radial-gradient(ellipse at 50% 0%, rgb(0 245 160 / 10%), transparent 56%),
+    radial-gradient(rgb(149 255 197 / 8%) 0.55px, transparent 0.55px);
+  background-position: center top, 12px 12px;
+  background-size: auto, 13px 13px;
+}
+
+@media print {
+  body,
+  #root,
+  .audit-popup {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    background: white !important;
+  }
+}
