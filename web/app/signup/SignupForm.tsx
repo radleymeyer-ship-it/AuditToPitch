@@ -58,7 +58,7 @@ export function SignupForm() {
 			const { data, error: signUpError } = await supabase.auth.signUp({
 				email,
 				password,
-				options: { emailRedirectTo: new URL('/login', window.location.origin).toString() },
+				options: { emailRedirectTo: new URL('/auth/callback', window.location.origin).toString() },
 			})
 
 			if (signUpError) {
@@ -78,7 +78,7 @@ export function SignupForm() {
 				return
 			}
 
-			router.replace('/#pricing')
+			router.replace('/dashboard')
 			router.refresh()
 		} catch {
 			setError('Account creation is unavailable right now. Please try again.')

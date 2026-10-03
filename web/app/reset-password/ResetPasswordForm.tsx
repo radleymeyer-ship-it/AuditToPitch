@@ -66,7 +66,7 @@ export function ResetPasswordForm() {
 				setError(updateError.message)
 				return
 			}
-			router.replace('/')
+			router.replace('/dashboard')
 			router.refresh()
 		} catch {
 			setError('Password update is unavailable right now. Please try again.')
