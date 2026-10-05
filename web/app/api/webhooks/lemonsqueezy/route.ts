@@ -31,65 +31,84 @@ function hasValidSignature(rawBody: string, signature: string, secret: string) {
 	return received.length === expected.length && timingSafeEqual(received, expected)
 }
 
+function missingColumn(error: { code?: string }) {
+return error.code === 'PGRST204' || error.code === '42703'
+}
+
 export async function POST(request: NextRequest) {
-	const secret = process.env.LEMONSQUEEZY_WEBHOOK_SECRET
-	if (!secret) {
-		return NextResponse.json({ error: 'Webhook secret is not configured' }, { status: 500 })
-	}
+try {
+const secret = process.env.LEMONSQUEEZY_WEBHOOK_SECRET
+if (!secret) {
+console.error('LEMONSQUEEZY_WEBHOOK_SECRET is not set')
+return NextResponse.json({ error: 'Webhook is not configured' }, { status: 500 })
+}
+if (!process.env.SUPABASE_SERVICE_ROLE_KEY || !process.env.NEXT_PUBLIC_SUPABASE_URL) {
+console.error('SUPABASE_SERVICE_ROLE_KEY or NEXT_PUBLIC_SUPABASE_URL is not set')
+return NextResponse.json({ error: 'Webhook is not configured' }, { status: 500 })
+}
 
-	const signature = request.headers.get('x-signature')
-	if (!signature) {
-		return NextResponse.json({ error: 'Missing x-signature header' }, { status: 400 })
-	}
+const signature = request.headers.get('x-signature')
+if (!signature) {
+return NextResponse.json({ error: 'Missing x-signature header' }, { status: 400 })
+}
 
-	const rawBody = await request.text()
-	if (!hasValidSignature(rawBody, signature, secret)) {
-		return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
-	}
+const rawBody = await request.text()
+if (!hasValidSignature(rawBody, signature, secret)) {
+console.error('Lemon Squeezy webhook signature mismatch; check LEMONSQUEEZY_WEBHOOK_SECRET')
+return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
+}
 
-	let event: LemonSqueezyEvent
-	try {
-		event = JSON.parse(rawBody) as LemonSqueezyEvent
-	} catch {
-		return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
-	}
+let body: LemonSqueezyEvent
+try {
+body = JSON.parse(rawBody) as LemonSqueezyEvent
+} catch {
+return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+}
 
-	const eventName = event.meta?.event_name
-	if (!eventName?.startsWith('subscription_')) {
-		console.info(`Lemon Squeezy webhook ignored: ${eventName ?? 'unknown event'}`)
-		return NextResponse.json({ received: true }, { status: 200 })
-	}
+const eventName = body?.meta?.event_name
+if (!eventName?.startsWith('subscription_')) {
+console.info(`Lemon Squeezy webhook ignored: ${eventName ?? 'unknown event'}`)
+return NextResponse.json({ received: true }, { status: 200 })
+}
 
-	const supabase = createSupabaseServiceClient()
-	const customUserId = event.meta?.custom_data?.user_id
-	const email = event.data?.attributes?.user_email
-	let userId = typeof customUserId === 'string' && customUserId ? customUserId : null
+const supabase = createSupabaseServiceClient()
+const customUserId = body?.meta?.custom_data?.user_id
+const email = body?.data?.attributes?.user_email
+let userId = typeof customUserId === 'string' && customUserId ? customUserId : null
 
-	try {
-		if (!userId && email) userId = await findUserIdByEmail(supabase, email)
-	} catch {
-		return NextResponse.json({ error: 'Failed to look up user' }, { status: 500 })
-	}
+if (!userId && email) userId = await findUserIdByEmail(supabase, email)
 
-	if (!userId) {
-		return NextResponse.json({ error: 'No user ID in custom data and no matching email' }, { status: 400 })
-	}
+if (!userId) {
+console.error(`Lemon Squeezy ${eventName}: no user_id in custom_data and no user matching email`)
+return NextResponse.json({ error: 'No user ID in custom data and no matching email' }, { status: 400 })
+}
 
-	const status = event.data?.attributes?.status
-	const isSubscribed =
-		eventName === 'subscription_expired' ? false : status ? ACTIVE_STATUSES.has(status) : null
-	if (isSubscribed === null) {
-		return NextResponse.json({ received: true }, { status: 200 })
-	}
+const status = body?.data?.attributes?.status
+const isSubscribed =
+eventName === 'subscription_expired' ? false : status ? ACTIVE_STATUSES.has(status) : null
+if (isSubscribed === null) {
+return NextResponse.json({ received: true }, { status: 200 })
+}
 
-	// Upsert so a user without a profile row still gets upgraded.
-	const { error } = await supabase
-		.from('profiles')
-		.upsert({ id: userId, is_subscribed: isSubscribed }, { onConflict: 'id' })
+let { error } = await supabase.from('profiles').upsert(
+{ id: userId, is_subscribed: isSubscribed, updated_at: new Date().toISOString() },
+{ onConflict: 'id' }
+)
+// Retry without updated_at when the profiles table has no such column.
+if (error && missingColumn(error)) {
+;({ error } = await supabase
+.from('profiles')
+.upsert({ id: userId, is_subscribed: isSubscribed }, { onConflict: 'id' }))
+}
 
-	if (error) {
-		return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 })
-	}
+if (error) {
+console.error('Supabase error:', error)
+return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 })
+}
 
-	return NextResponse.json({ received: true }, { status: 200 })
+return NextResponse.json({ received: true }, { status: 200 })
+} catch (err) {
+console.error('Lemon Squeezy webhook failed:', err)
+return NextResponse.json({ error: 'Webhook handler failed' }, { status: 500 })
+}
 }
