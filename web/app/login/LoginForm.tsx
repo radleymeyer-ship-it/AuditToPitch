@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -44,6 +44,32 @@ export function LoginForm() {
 	const [password, setPassword] = useState('')
 	const [error, setError] = useState('')
 	const [isSubmitting, setIsSubmitting] = useState(false)
+
+	// Already signed in on the web: pass the existing session to the extension without a second login.
+	useEffect(() => {
+		if (new URLSearchParams(window.location.search).get('source') !== 'extension') return
+		let cancelled = false
+		void (async () => {
+			const { data } = await createSupabaseBrowserClient().auth.getSession()
+			const session = data.session
+			if (!session || cancelled) return
+			const delivered = await sendSessionToExtension({
+				access_token: session.access_token,
+				refresh_token: session.refresh_token,
+				expires_at: session.expires_at ?? Math.floor(Date.now() / 1000) + session.expires_in,
+				user: { id: session.user.id, email: session.user.email },
+			})
+			if (cancelled) return
+			if (delivered) {
+				router.replace('/dashboard')
+			} else {
+				setError('The extension could not be reached. Check its ID and reload it before signing in again.')
+			}
+		})()
+		return () => {
+			cancelled = true
+		}
+	}, [router])
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault()
