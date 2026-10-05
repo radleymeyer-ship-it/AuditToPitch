@@ -219,17 +219,17 @@ async function handleAudit(request: NextRequest) {
 	if (useMockAudit) {
 		result = createMockAuditResult(pageAudit)
 	} else {
-		if (!process.env.GROQ_API_KEY) {
-			return respond(request, { error: 'GROQ_API_KEY is not defined in environment' }, 500)
+		if (!process.env.GEMINI_API_KEY) {
+			return respond(request, { error: 'Missing GEMINI_API_KEY in environment' }, 500)
 		}
 		const openai = new OpenAI({
-			apiKey: process.env.GROQ_API_KEY,
-			baseURL: 'https://api.groq.com/openai/v1',
+			apiKey: process.env.GEMINI_API_KEY,
+			baseURL: 'https://generativelanguage.googleapis.com/v1beta/openai/',
 		})
 		let completion
 		try {
 			completion = await openai.chat.completions.create({
-				model: process.env.GROQ_MODEL || 'llama-3.1-8b-instant',
+				model: 'gemini-1.5-flash',
 				response_format: { type: 'json_object' },
 				temperature: 0.7,
 				messages: [
@@ -247,7 +247,7 @@ async function handleAudit(request: NextRequest) {
 				return respond(
 					request,
 					{
-						error: 'The AI service rejected its API key. Update GROQ_API_KEY in web/.env.local and restart the web server.',
+						error: 'The AI service rejected its API key. Update GEMINI_API_KEY in web/.env.local and restart the web server.',
 						code: 'OPENAI_AUTH_FAILED',
 					},
 					503
@@ -258,14 +258,14 @@ async function handleAudit(request: NextRequest) {
 				return respond(
 					request,
 					{
-						error: 'The AI service rate or usage limit was reached. Check your Groq usage and limits.',
+						error: 'The AI service rate or usage limit was reached. Check your Gemini usage and limits.',
 						code: 'OPENAI_LIMIT_REACHED',
 					},
 					503
 				)
 			}
 
-			console.error('Groq request failed:', error)
+			console.error('Gemini request failed:', error)
 			const detail = error instanceof Error ? error.message : 'Failed to generate audit'
 			return respond(request, { error: `Failed to generate audit: ${detail}` }, 502)
 		}
