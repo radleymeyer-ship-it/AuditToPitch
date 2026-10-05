@@ -229,7 +229,7 @@ async function handleAudit(request: NextRequest) {
 		let completion
 		try {
 			completion = await openai.chat.completions.create({
-				model: 'llama-3.3-70b-versatile',
+				model: process.env.GROQ_MODEL || 'llama-3.1-8b-instant',
 				response_format: { type: 'json_object' },
 				temperature: 0.7,
 				messages: [
