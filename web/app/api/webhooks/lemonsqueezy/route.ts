@@ -102,7 +102,16 @@ if (error && missingColumn(error)) {
 .select('id'))
 }
 if (!error && !updated?.length) {
-;({ error } = await supabase.from('profiles').insert({ id: userId, is_subscribed: isSubscribed }))
+// profiles.email is NOT NULL, so a new row needs the account's email.
+const { data: authUser, error: authLookupError } = await supabase.auth.admin.getUserById(userId)
+const profileEmail = authUser?.user?.email ?? email
+if (authLookupError || !profileEmail) {
+console.error('Could not find an email for new profile', authLookupError)
+return NextResponse.json({ error: 'Failed to create profile' }, { status: 500 })
+}
+;({ error } = await supabase
+.from('profiles')
+.insert({ id: userId, email: profileEmail, is_subscribed: isSubscribed }))
 }
 
 if (error) {
