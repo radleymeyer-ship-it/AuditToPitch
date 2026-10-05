@@ -90,15 +90,19 @@ if (isSubscribed === null) {
 return NextResponse.json({ received: true }, { status: 200 })
 }
 
-let { error } = await supabase.from('profiles').upsert(
-{ id: userId, is_subscribed: isSubscribed, updated_at: new Date().toISOString() },
-{ onConflict: 'id' }
-)
+// Update first: an upsert's insert half fails on NOT NULL columns (23502) even when the row exists.
+const fields = { is_subscribed: isSubscribed, updated_at: new Date().toISOString() }
+let { data: updated, error } = await supabase.from('profiles').update(fields).eq('id', userId).select('id')
 // Retry without updated_at when the profiles table has no such column.
 if (error && missingColumn(error)) {
-;({ error } = await supabase
+;({ data: updated, error } = await supabase
 .from('profiles')
-.upsert({ id: userId, is_subscribed: isSubscribed }, { onConflict: 'id' }))
+.update({ is_subscribed: isSubscribed })
+.eq('id', userId)
+.select('id'))
+}
+if (!error && !updated?.length) {
+;({ error } = await supabase.from('profiles').insert({ id: userId, is_subscribed: isSubscribed }))
 }
 
 if (error) {
