@@ -1,1 +1,1 @@
-export { POST } from '../webhooks/stripe/route'
+export { POST } from '../webhooks/lemonsqueezy/route'

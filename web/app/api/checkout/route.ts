@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe } from '@/lib/stripe/client'
 import { createSupabaseServiceClient } from '@/lib/supabase/server'
 import { extensionCorsHeaders, extensionOptions } from '@/lib/extension-cors'
 
@@ -28,21 +27,40 @@ export async function POST(request: NextRequest) {
 		}
 
 		const origin = (process.env.NEXT_PUBLIC_SITE_URL ?? request.nextUrl.origin).replace(/\/+$/, '')
-		const session = await stripe.checkout.sessions.create({
-			mode: 'subscription',
-			line_items: [{ price: process.env.STRIPE_PRO_PRICE_ID!, quantity: 1 }],
-			client_reference_id: user.id,
-			metadata: { userId: user.id },
-			subscription_data: { metadata: { userId: user.id } },
-			success_url: `${origin}/success`,
-			cancel_url: `${origin}/?checkout=cancelled`,
+		const response = await fetch('https://api.lemonsqueezy.com/v1/checkouts', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/vnd.api+json',
+				'Content-Type': 'application/vnd.api+json',
+				Authorization: `Bearer ${process.env.LEMONSQUEEZY_API_KEY}`,
+			},
+			body: JSON.stringify({
+				data: {
+					type: 'checkouts',
+					attributes: {
+						checkout_data: { email: user.email, custom: { user_id: user.id } },
+						product_options: { redirect_url: `${origin}/success` },
+					},
+					relationships: {
+						store: { data: { type: 'stores', id: process.env.LEMONSQUEEZY_STORE_ID } },
+						variant: { data: { type: 'variants', id: process.env.LEMONSQUEEZY_VARIANT_ID } },
+					},
+				},
+			}),
 		})
 
-		if (!session.url) {
+		if (!response.ok) {
 			return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 502, headers })
 		}
 
-		return NextResponse.json({ url: session.url }, { status: 200, headers })
+		const checkout = (await response.json()) as { data?: { attributes?: { url?: string } } }
+		const url = checkout.data?.attributes?.url
+
+		if (!url) {
+			return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 502, headers })
+		}
+
+		return NextResponse.json({ url }, { status: 200, headers })
 	} catch (err) {
 		const message = err instanceof Error ? err.message : 'Unknown error'
 		return NextResponse.json({ error: `Checkout failed: ${message}` }, { status: 500, headers })
