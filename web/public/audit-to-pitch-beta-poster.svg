@@ -1,0 +1,248 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="90" y1="0" x2="1010" y2="1350" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#08150F"/>
+      <stop offset=".52" stop-color="#030806"/>
+      <stop offset="1" stop-color="#06110B"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#C3FF6B"/>
+      <stop offset=".52" stop-color="#00F5A0"/>
+      <stop offset="1" stop-color="#00BD78"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#10271B"/>
+      <stop offset="1" stop-color="#07110B"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#FBFFF9"/>
+      <stop offset="1" stop-color="#B9CBBE"/>
+    </linearGradient>
+    <linearGradient id="rocket" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#F4FFF8"/>
+      <stop offset=".52" stop-color="#B7FFD7"/>
+      <stop offset="1" stop-color="#00D987"/>
+    </linearGradient>
+    <radialGradient id="topGlow" cx="0" cy="0" r="1" gradientTransform="matrix(560 230 -210 510 850 0)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00F5A0" stop-opacity=".16"/>
+      <stop offset="1" stop-color="#00F5A0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="rocketGlow" cx="0" cy="0" r="1" gradientTransform="matrix(220 0 0 190 850 1067)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00F5A0" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#00F5A0" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse">
+      <path d="M44 0H0v44" stroke="#B8FFD7" stroke-opacity=".035"/>
+    </pattern>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="12" stdDeviation="15" flood-color="#000" flood-opacity=".42"/>
+    </filter>
+  </defs>
+
+  <rect width="1080" height="1350" fill="url(#bg)"/>
+  <rect width="1080" height="1350" fill="url(#grid)"/>
+  <rect width="1080" height="340" fill="url(#topGlow)"/>
+  <path d="M48 296H1032" stroke="#8DFFB7" stroke-opacity=".16"/>
+
+  <g font-family="Inter, Poppins, Arial, sans-serif">
+    <g transform="translate(58 48)">
+      <rect width="42" height="42" rx="12" fill="#07130D" stroke="#00F5A0" stroke-opacity=".75"/>
+      <path d="M16 10h-2a6 6 0 0 0-6 6v4m20-10h2a6 6 0 0 1 6 6v4M8 23v3a6 6 0 0 0 6 6h2m12 0h2a6 6 0 0 0 6-6v-3" stroke="#00F5A0" stroke-width="3" stroke-linecap="round"/>
+      <path d="M18 16.5a1.7 1.7 0 0 1 2.6-1.4l8.1 5.2a1.7 1.7 0 0 1 0 2.9l-8.1 5.2a1.7 1.7 0 0 1-2.6-1.4v-10.5Z" fill="#B7FFD7"/>
+      <path d="M31 7c1 4 3 6 7 7-4 1-6 3-7 7-1-4-3-6-7-7 4-1 6-3 7-7Z" fill="#C3FF6B"/>
+      <text x="55" y="27" fill="#F5FFF8" font-size="21" font-weight="750" letter-spacing="-.65">AuditToPitch<tspan fill="#00F5A0">Pro</tspan><tspan fill="#95FFC5" font-size="11" baseline-shift="super">™</tspan></text>
+    </g>
+    <g transform="translate(838 54)">
+      <rect width="184" height="32" rx="16" fill="#00F5A0" fill-opacity=".09" stroke="#00F5A0" stroke-opacity=".38"/>
+      <circle cx="17" cy="16" r="4" fill="#C3FF6B" filter="url(#glow)"/>
+      <text x="31" y="21" fill="#B7FFD7" font-size="11" font-weight="700" letter-spacing="1.15">BETA ACCESS · 50 SEATS</text>
+    </g>
+
+    <text x="60" y="132" fill="#95FFC5" font-size="12" font-weight="700" letter-spacing="2.4">SOUND FAMILIAR?</text>
+    <text x="58" y="179" fill="#F5FFF8" font-size="31" font-weight="760" letter-spacing="-1.1">Audits shouldn’t</text>
+    <text x="58" y="218" fill="#F5FFF8" font-size="31" font-weight="760" letter-spacing="-1.1">feel like a <tspan fill="#C3FF6B">chore…</tspan></text>
+    <text x="60" y="249" fill="#98AA9F" font-size="14" font-weight="450">Endless tabs. Messy notes. Another late night.</text>
+
+    <g transform="translate(700 103)" filter="url(#shadow)">
+      <ellipse cx="146" cy="163" rx="126" ry="18" fill="#00F5A0" fill-opacity=".08"/>
+      <path d="m47 34 57-15 15 69-57 15z" fill="url(#paper)" transform="rotate(-13 47 34)"/>
+      <path d="m59 52 42-11M64 66l37-9" stroke="#26382D" stroke-opacity=".38" stroke-width="3" stroke-linecap="round" transform="rotate(-13 59 52)"/>
+      <path d="m214 38 60 8-9 71-60-8z" fill="url(#paper)" transform="rotate(11 214 38)"/>
+      <path d="m222 58 40 5m-42 9 36 5" stroke="#26382D" stroke-opacity=".38" stroke-width="3" stroke-linecap="round" transform="rotate(11 222 58)"/>
+      <path d="M104 132c4-32 22-52 51-52 30 0 49 21 52 53l5 25H98l6-26Z" fill="#233B2C"/>
+      <path d="M128 118h54l12 46h-77l11-46Z" fill="#17291E" stroke="#385943"/>
+      <path d="M121 54c0-25 15-42 36-42 23 0 38 17 38 42v14c0 24-16 41-38 41-21 0-36-17-36-41V54Z" fill="#DCA981"/>
+      <path d="M119 55c-5-29 11-51 39-51 29 0 43 21 39 50-8-4-15-11-21-20-13 11-32 17-57 16Z" fill="#26322B"/>
+      <path d="M127 68c5 4 10 4 15 0m21 0c5 4 10 4 15 0" stroke="#402C27" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="m152 72-3 13 8 1" stroke="#A86E55" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M140 99c9-7 22-7 31 0" stroke="#844E43" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M104 66 91 54m130 8 13-9m-94-48-2-14" stroke="#C3FF6B" stroke-width="2" stroke-linecap="round" opacity=".8"/>
+      <path d="m77 125 15 3m143-9 13-7" stroke="#00F5A0" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+    </g>
+    <g fill="#C3FF6B" opacity=".9">
+      <path d="M943 115c1 6 4 9 10 10-6 1-9 4-10 10-1-6-4-9-10-10 6-1 9-4 10-10Z"/>
+      <circle cx="987" cy="203" r="2.5"/><circle cx="715" cy="233" r="2"/>
+    </g>
+
+    <text x="540" y="344" fill="#F5FFF8" font-size="37" font-weight="780" text-anchor="middle" letter-spacing="-1.4">AuditToPitch Pro™ turns audits</text>
+    <text x="540" y="390" fill="#F5FFF8" font-size="37" font-weight="780" text-anchor="middle" letter-spacing="-1.4">into <tspan fill="url(#green)">growth.</tspan></text>
+    <text x="540" y="421" fill="#A5B8AC" font-size="16" font-weight="450" text-anchor="middle" letter-spacing=".1">Audit websites. Generate pitches. Win more clients.</text>
+
+    <g transform="translate(70 447)">
+      <rect width="940" height="191" rx="22" fill="url(#screen)" stroke="#7AFFAF" stroke-opacity=".24"/>
+      <path d="M22 1h896" stroke="#00F5A0" stroke-opacity=".42"/>
+      <circle cx="27" cy="22" r="4" fill="#FF8066"/><circle cx="43" cy="22" r="4" fill="#C3FF6B"/><circle cx="59" cy="22" r="4" fill="#00F5A0"/>
+      <rect x="81" y="13" width="271" height="18" rx="9" fill="#0B1B12" stroke="#254633"/>
+      <text x="99" y="26" fill="#83A090" font-size="9" font-weight="550">acmecreative.co  ·  LIVE AUDIT</text>
+      <path d="M28 49H912" stroke="#B7FFD7" stroke-opacity=".09"/>
+      <g transform="translate(49 66)">
+        <circle cx="34" cy="23" r="20" fill="#0D3020" stroke="#00F5A0" stroke-opacity=".75"/>
+        <path d="m25 23 6 6 12-14" stroke="#95FFC5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="66" y="20" fill="#F0FFF5" font-size="15" font-weight="700">A clearer path to more clients</text>
+        <text x="66" y="42" fill="#88A091" font-size="11">Your audit is ready to become a pitch.</text>
+        <rect x="65" y="59" width="116" height="28" rx="14" fill="#00F5A0"/>
+        <text x="123" y="77" fill="#04130B" font-size="10" font-weight="750" text-anchor="middle">CREATE PITCH</text>
+      </g>
+      <g transform="translate(523 60)">
+        <rect width="166" height="112" rx="12" fill="#0B1A11" stroke="#234630"/>
+        <text x="15" y="22" fill="#8EA698" font-size="9" font-weight="650" letter-spacing=".8">SITE HEALTH</text>
+        <text x="15" y="68" fill="#F5FFF8" font-size="40" font-weight="760">84</text>
+        <text x="79" y="66" fill="#8EA698" font-size="10">/ 100</text>
+        <path d="M15 87h136" stroke="#203A2A"/>
+        <rect x="15" y="96" width="93" height="4" rx="2" fill="#00F5A0"/>
+      </g>
+      <g transform="translate(706 60)">
+        <rect width="205" height="112" rx="12" fill="#0B1A11" stroke="#234630"/>
+        <text x="15" y="22" fill="#8EA698" font-size="9" font-weight="650" letter-spacing=".8">OPPORTUNITY FOUND</text>
+        <path d="M17 85V57m25 28V43m25 42V66m25 19V33m25 52V50m25 35V25m25 60V41" stroke="#00F5A0" stroke-width="8" stroke-linecap="round" opacity=".86"/>
+        <path d="m15 48 27-12 25 16 25-30 25 17 25-27 25 15 28-22" stroke="#C3FF6B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+      </g>
+      <path d="m417 90 25 25m0-25-25 25" stroke="#C3FF6B" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+    </g>
+
+    <g transform="translate(0 0)">
+      <path d="M100 619H980" stroke="#00F5A0" stroke-opacity=".12"/>
+      <text x="540" y="655" fill="#87A190" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="2">YOUR NEW BUSINESS DEVELOPMENT TEAM</text>
+      <g transform="translate(247 655)">
+        <path d="M54 112c5-48 23-73 61-73s57 25 63 73v25H44l10-25Z" fill="#172A1F" stroke="#3B684C"/>
+        <path d="M91 73h51l18 64H72l19-64Z" fill="#21392A"/>
+        <path d="M83 39c0-27 15-44 34-44 22 0 38 17 38 44v17c0 22-16 38-38 38S83 78 83 56V39Z" fill="#C68B69"/>
+        <path d="M81 42C77 13 94-8 120-8c25 0 39 18 38 44-11-3-21-10-27-20-13 11-30 16-50 16Z" fill="#171D19"/>
+        <path d="M94 53c4 3 8 3 12 0m24 0c4 3 8 3 12 0" stroke="#382620" stroke-width="2" stroke-linecap="round"/>
+        <path d="M106 77c7 5 16 5 23 0" stroke="#754A3C" stroke-width="2" stroke-linecap="round"/>
+        <path d="M68 123h101l15 14H51l17-14Z" fill="#00D987" fill-opacity=".16" stroke="#00F5A0" stroke-opacity=".5"/>
+      </g>
+      <g transform="translate(607 655)">
+        <path d="M54 112c5-48 23-73 61-73s57 25 63 73v25H44l10-25Z" fill="#14291D" stroke="#3B684C"/>
+        <path d="M91 73h51l18 64H72l19-64Z" fill="#172B20"/>
+        <path d="M83 39c0-27 15-44 34-44 22 0 38 17 38 44v17c0 22-16 38-38 38S83 78 83 56V39Z" fill="#E0AF87"/>
+        <path d="M81 42C77 13 94-8 120-8c25 0 39 18 38 44-11-3-21-10-27-20-13 11-30 16-50 16Z" fill="#704B37"/>
+        <path d="M94 53c4 3 8 3 12 0m24 0c4 3 8 3 12 0" stroke="#50352B" stroke-width="2" stroke-linecap="round"/>
+        <path d="M106 77c7 5 16 5 23 0" stroke="#A26854" stroke-width="2" stroke-linecap="round"/>
+        <path d="M68 123h101l15 14H51l17-14Z" fill="#00D987" fill-opacity=".16" stroke="#00F5A0" stroke-opacity=".5"/>
+      </g>
+      <g transform="translate(201 756)" filter="url(#shadow)">
+        <rect width="279" height="87" rx="12" fill="#101F15" stroke="#456F50"/>
+        <rect x="13" y="13" width="155" height="61" rx="7" fill="#0A150D"/>
+        <path d="M28 59 55 44l23 10 24-25 24 14 24-16" stroke="#00F5A0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+        <path d="M27 65h126" stroke="#62826C" stroke-opacity=".34"/>
+        <path d="M181 25h72m-72 14h54m-54 14h63" stroke="#8EA698" stroke-opacity=".5" stroke-width="4" stroke-linecap="round"/>
+        <path d="M114 87h52l16 12H99l15-12Z" fill="#152B1D" stroke="#456F50"/>
+      </g>
+      <g transform="translate(600 756)" filter="url(#shadow)">
+        <rect width="279" height="87" rx="12" fill="#101F15" stroke="#456F50"/>
+        <rect x="13" y="13" width="155" height="61" rx="7" fill="#0A150D"/>
+        <path d="M28 58h23V45H28v13Zm35 0h23V34H63v24Zm35 0h23V27H98v31Zm35 0h23V19h-23v39Z" fill="#00F5A0" opacity=".79"/>
+        <path d="M181 25h72m-72 14h54m-54 14h63" stroke="#8EA698" stroke-opacity=".5" stroke-width="4" stroke-linecap="round"/>
+        <path d="M114 87h52l16 12H99l15-12Z" fill="#152B1D" stroke="#456F50"/>
+      </g>
+    </g>
+
+    <text x="540" y="882" fill="#87A190" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="2">EVERYTHING YOU NEED TO WIN THE NEXT CLIENT</text>
+    <g transform="translate(58 901)">
+      <rect width="466" height="69" rx="15" fill="#0A1710" stroke="#34563D"/>
+      <rect x="14" y="13" width="43" height="43" rx="13" fill="#00F5A0" fill-opacity=".1" stroke="#00F5A0" stroke-opacity=".62"/>
+      <path d="M27 24h18v21H27zM31 20h18v21" stroke="#95FFC5" stroke-width="2" stroke-linejoin="round"/>
+      <path d="m32 33 3 3 7-8" stroke="#C3FF6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="73" y="41" fill="#F2FFF6" font-size="17" font-weight="670">Instant DOM &amp; Pixel Inspector</text>
+      <circle cx="437" cy="34" r="3" fill="#00F5A0" filter="url(#glow)"/>
+    </g>
+    <g transform="translate(556 901)">
+      <rect width="466" height="69" rx="15" fill="#0A1710" stroke="#34563D"/>
+      <rect x="14" y="13" width="43" height="43" rx="13" fill="#00F5A0" fill-opacity=".1" stroke="#00F5A0" stroke-opacity=".62"/>
+      <path d="M23 44h25M26 39l6-9 6 5 8-12" stroke="#95FFC5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="31" cy="45" r="2" fill="#C3FF6B"/><circle cx="43" cy="45" r="2" fill="#C3FF6B"/>
+      <text x="73" y="41" fill="#F2FFF6" font-size="17" font-weight="670">Competitor Benchmarking</text>
+      <circle cx="437" cy="34" r="3" fill="#00F5A0" filter="url(#glow)"/>
+    </g>
+    <g transform="translate(58 982)">
+      <rect width="466" height="69" rx="15" fill="#0A1710" stroke="#34563D"/>
+      <rect x="14" y="13" width="43" height="43" rx="13" fill="#00F5A0" fill-opacity=".1" stroke="#00F5A0" stroke-opacity=".62"/>
+      <path d="M27 23h18v21H27z" stroke="#95FFC5" stroke-width="2"/>
+      <path d="m30 29 5 4-5 4m8 0h5" stroke="#C3FF6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="73" y="41" fill="#F2FFF6" font-size="17" font-weight="670">AI Video Pitch Scripts</text>
+      <circle cx="437" cy="34" r="3" fill="#00F5A0" filter="url(#glow)"/>
+    </g>
+    <g transform="translate(556 982)">
+      <rect width="466" height="69" rx="15" fill="#0A1710" stroke="#34563D"/>
+      <rect x="14" y="13" width="43" height="43" rx="13" fill="#00F5A0" fill-opacity=".1" stroke="#00F5A0" stroke-opacity=".62"/>
+      <path d="M27 21h14l7 7v19H27z" stroke="#95FFC5" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M40 21v8h8m-16 7h10m-10 5h10" stroke="#C3FF6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="73" y="41" fill="#F2FFF6" font-size="17" font-weight="670">Branded PDF Reports</text>
+      <circle cx="437" cy="34" r="3" fill="#00F5A0" filter="url(#glow)"/>
+    </g>
+
+    <path d="M48 1072H1032" stroke="#8DFFB7" stroke-opacity=".16"/>
+    <rect x="0" y="1073" width="1080" height="189" fill="url(#rocketGlow)"/>
+    <g transform="translate(58 1097)">
+      <text x="0" y="20" fill="#C3FF6B" font-size="12" font-weight="750" letter-spacing="1.8">THE FIRST 50 GET IN FIRST</text>
+      <text x="0" y="62" fill="#F5FFF8" font-size="27" font-weight="760" letter-spacing="-.7">We’re opening beta access —</text>
+      <text x="0" y="97" fill="#F5FFF8" font-size="27" font-weight="760" letter-spacing="-.7">only <tspan fill="#C3FF6B">50 seats left.</tspan></text>
+      <rect x="0" y="118" width="326" height="51" rx="25.5" fill="url(#green)" filter="url(#shadow)"/>
+      <text x="163" y="150" fill="#03120A" font-size="15" font-weight="800" text-anchor="middle">Become a Beta Tester Today</text>
+      <path d="M294 137h17m-6-6 6 6-6 6" stroke="#03120A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g transform="translate(752 1081)">
+      <circle cx="132" cy="91" r="112" fill="#00F5A0" fill-opacity=".075"/>
+      <path d="M43 147c35-9 58-26 78-54 22-31 33-63 32-93 30-1 61 8 79 23 14 18 24 48 23 77-29-1-61 11-92 31-28 18-44 43-54 75l-18-36-48-23Z" fill="url(#rocket)" stroke="#D2FFE3" stroke-width="2"/>
+      <path d="M171 12c-12 22-20 49-20 77l52 48c28 0 55-8 77-20-1-29-9-59-24-77-18-15-48-27-85-28Z" fill="#10251A" fill-opacity=".62"/>
+      <circle cx="222" cy="63" r="17" fill="#06120B" stroke="#C3FF6B" stroke-width="3"/>
+      <circle cx="222" cy="63" r="7" fill="#00F5A0" filter="url(#glow)"/>
+      <path d="m80 122-27 3-24 31 48 2m79-71-4-30 26-25" stroke="#E7FFF0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="m66 158-25 39m62-25-14 51m48-36-3 42" stroke="#00F5A0" stroke-width="7" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M79 151c-18 16-26 36-24 61 18-1 34-9 49-24m49-134c16-18 36-26 61-24-1 18-9 34-24 49" fill="#C3FF6B" fill-opacity=".17" stroke="#C3FF6B" stroke-opacity=".65" stroke-width="2"/>
+      <path d="m286 17 5 16 16 5-16 5-5 16-5-16-16-5 16-5 5-16ZM25 87l3 10 10 3-10 3-3 10-3-10-10-3 10-3 3-10Z" fill="#C3FF6B"/>
+      <circle cx="304" cy="107" r="3" fill="#95FFC5"/><circle cx="25" cy="49" r="2" fill="#95FFC5"/>
+    </g>
+
+    <path d="M48 1273H1032" stroke="#8DFFB7" stroke-opacity=".2"/>
+    <g transform="translate(58 1290)">
+      <rect width="28" height="28" rx="8" fill="#07130D" stroke="#00F5A0" stroke-opacity=".7"/>
+      <path d="M11 8h-1a4 4 0 0 0-4 4v2m14-6h1a4 4 0 0 1 4 4v2M6 17v1a4 4 0 0 0 4 4h1m9 0h1a4 4 0 0 0 4-4v-1" stroke="#00F5A0" stroke-width="2" stroke-linecap="round"/>
+      <path d="M13 12a1.2 1.2 0 0 1 1.8-1l5 3.2a1.1 1.1 0 0 1 0 1.9l-5 3.2a1.2 1.2 0 0 1-1.8-1v-6.3Z" fill="#B7FFD7"/>
+      <text x="39" y="19" fill="#ECFFF3" font-size="15" font-weight="730">AuditToPitch<tspan fill="#00F5A0">Pro</tspan><tspan fill="#95FFC5" font-size="9" baseline-shift="super">™</tspan></text>
+      <text x="260" y="18" fill="#708478" font-size="11" font-weight="500">Turn the next audit into your next client.</text>
+    </g>
+    <g transform="translate(787 1285)">
+      <rect width="235" height="39" rx="8" fill="#F7F9F7"/>
+      <g transform="translate(12 8)">
+        <circle cx="11" cy="11" r="10" fill="#fff"/>
+        <path d="M11 1a10 10 0 0 1 8.66 5H11v5l-5.5 5.5A10 10 0 0 1 11 1Z" fill="#4285F4"/>
+        <path d="M1.5 7A10 10 0 0 1 11 1v10H1Z" fill="#EA4335"/>
+        <path d="M2.34 16.5 11 11h8.66A10 10 0 0 1 2.34 16.5Z" fill="#34A853"/>
+        <path d="M19.66 6A10 10 0 0 1 19.66 16.5L11 11v-5Z" fill="#FBBC04"/>
+        <circle cx="11" cy="11" r="4.3" fill="#fff"/>
+        <circle cx="11" cy="11" r="3.3" fill="#4285F4"/>
+      </g>
+      <text x="43" y="16" fill="#5F6368" font-size="8.5" font-weight="550">AVAILABLE ON</text>
+      <text x="43" y="29" fill="#202124" font-size="12" font-weight="700">Chrome Web Store</text>
+    </g>
+  </g>
+</svg>
