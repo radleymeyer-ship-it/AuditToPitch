@@ -1,19 +1,25 @@
 @import "tailwindcss";
+@import "@fontsource/poppins/400.css";
+@import "@fontsource/poppins/500.css";
+@import "@fontsource/poppins/600.css";
+@import "@fontsource/poppins/700.css";
+@import "@fontsource/poppins/800.css";
 
 :root {
-  color-scheme: dark;
-  --background: #07140f;
-  --panel: #0b1f17;
-  --raised: #0f2a1f;
-  --line: #1c3629;
-  --ink: #effff5;
-  --muted: #96aa9e;
+  color-scheme: light;
+  --background: #eef1ef;
+  --panel: #ffffff;
+  --raised: #f3f6f4;
+  --line: #d3dbd6;
+  --ink: #07140f;
+  --muted: #5f6f67;
   --mint: #1cf08c;
+  --brand: #0c8a50;
   --mint-light: #7bf7bd;
   --lime: #c3ff6b;
-  --alert: #ff5468;
-  --amber: #ffb23e;
-  font-family: 'Segoe UI Variable', 'Segoe UI', sans-serif;
+  --alert: #d63a4e;
+  --amber: #c27a05;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
   font-size: 13px;
   letter-spacing: 0;
   color: var(--ink);
@@ -31,6 +37,7 @@
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-mint: var(--mint);
+  --color-brand: var(--brand);
   --color-mint-light: var(--mint-light);
   --color-lime: var(--lime);
   --color-alert: var(--alert);
@@ -64,10 +71,15 @@ p {
 
 .audit-popup {
   background-color: var(--background);
-  background-image: radial-gradient(ellipse at 50% 0%, rgb(0 245 160 / 10%), transparent 56%),
-    radial-gradient(rgb(149 255 197 / 8%) 0.55px, transparent 0.55px);
-  background-position: center top, 12px 12px;
-  background-size: auto, 13px 13px;
+  background-image: linear-gradient(rgb(7 20 15 / 5.5%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(7 20 15 / 5.5%) 1px, transparent 1px),
+    radial-gradient(ellipse at 50% 110%, rgb(28 240 140 / 18%), transparent 60%);
+  background-size: 24px 24px, 24px 24px, auto;
+}
+
+.audit-popup section > div,
+.audit-popup section > button {
+  box-shadow: 0 1px 2px rgb(7 20 15 / 6%);
 }
 
 .donut {
@@ -79,7 +91,7 @@ p {
   flex: none;
   place-items: center;
   border-radius: 50%;
-  background: conic-gradient(var(--c) calc(var(--p) * 1%), #16301f 0);
+  background: conic-gradient(var(--c) calc(var(--p) * 1%), #dfe7e2 0);
 }
 
 .donut::after {
@@ -103,6 +115,18 @@ p {
   background: #041009;
   padding: 12px 14px;
   box-shadow: 0 0 0 1px rgb(28 240 140 / 25%) inset;
+}
+
+.scan-window .bg-raised {
+  background: #0f2a1f;
+}
+
+.scan-window .bg-line {
+  background: #1c3629;
+}
+
+.scan-window {
+  color: #96aa9e;
 }
 
 .scan-line {
