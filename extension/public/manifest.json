@@ -9,7 +9,10 @@
 		"48": "Icons/icon48.png",
 		"128": "Icons/icon128.png"
 	},
-	"permissions": ["activeTab", "storage"],
+	"permissions": [
+		"activeTab",
+		"storage"
+	],
 	"action": {
 		"default_popup": "index.html",
 		"default_icon": {
@@ -22,13 +25,23 @@
 		"type": "module"
 	},
 	"externally_connectable": {
-		"matches": ["http://localhost/*", "http://127.0.0.1/*", "https://audit-to-pitch-pro.vercel.app/*"]
+		"matches": [
+			"http://localhost/*",
+			"http://127.0.0.1/*",
+			"https://audit-to-pitch-pro.vercel.app/*"
+		]
 	},
 	"content_scripts": [
 		{
-			"matches": ["http://*/*", "https://*/*"],
-			"js": ["content.js"],
+			"matches": [
+				"http://*/*",
+				"https://*/*"
+			],
+			"js": [
+				"content.js"
+			],
 			"run_at": "document_idle"
 		}
-	]
+	],
+	"key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqlzGEbtw4lN3mGCiJZQSWEW2r+z5NmD6CmSTnd82WihNeUCuZzqbgkVk9ictRGC7a/AtOFKDFIVkGV8cM1Pvpe6o0Cx8QsZ7yAooWqcba0PGq36wCYPilAmKRoyjkuAVRUyGQ0nAkJCl6O/EO1Q4CmBpW57Tx47nFGgXMpg3tNqsS63V65/OLkGDDVcjCuhNIICmsJY0F02ebgRFKoV4ycb+kmsm+eWuYZ3L1+r8Mjmdbq+eKLDXnWqpBRPl2Jc7zhtB/YtwsKrBtqrshs4ISeDrdaFymrZCFv4yH0Fer7WS2FZCQMaofj/YRB0h3T/WHWG4DnW6Iz5pnjZPEBF1tQIDAQAB"
 }

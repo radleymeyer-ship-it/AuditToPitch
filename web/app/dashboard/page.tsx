@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 import { redirect } from 'next/navigation'
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
+import { ExtensionSessionSync } from '@/components/dashboard/ExtensionSessionSync'
 import { UpgradeButton } from '@/components/dashboard/UpgradeButton'
 import { FREE_AUDIT_LIMIT, getAuditUsage } from '@/lib/audit-quota'
 import { createSupabaseServiceClient } from '@/lib/supabase/server'
@@ -76,6 +77,7 @@ export default async function DashboardPage() {
 	return (
 		<div className={`${styles.page} ${poppins.variable}`}>
 			<div className={styles.wrap}>
+				<ExtensionSessionSync />
 				<DashboardHeader email={user.email ?? ''} isPro={isPro} />
 
 				<section className={styles.hero}>
