@@ -229,7 +229,7 @@ async function handleAudit(request: NextRequest) {
 		let completion
 		try {
 			completion = await openai.chat.completions.create({
-				model: 'gemini-1.5-flash',
+				model: 'gemini-2.5-flash',
 				response_format: { type: 'json_object' },
 				temperature: 0.7,
 				messages: [
