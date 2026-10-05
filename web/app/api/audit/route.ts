@@ -265,7 +265,9 @@ async function handleAudit(request: NextRequest) {
 				)
 			}
 
-			return respond(request, { error: 'Failed to generate audit' }, 502)
+			console.error('Groq request failed:', error)
+			const detail = error instanceof Error ? error.message : 'Failed to generate audit'
+			return respond(request, { error: `Failed to generate audit: ${detail}` }, 502)
 		}
 
 		const rawContent = completion.choices[0]?.message?.content
