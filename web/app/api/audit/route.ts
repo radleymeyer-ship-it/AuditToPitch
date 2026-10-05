@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { openai } from '@/lib/openai/client'
+import OpenAI from 'openai'
 import { createSupabaseServiceClient } from '@/lib/supabase/server'
 import { FREE_AUDIT_LIMIT, getAuditUsage } from '@/lib/audit-quota'
 import { extensionCorsHeaders, extensionOptions } from '@/lib/extension-cors'
@@ -144,6 +144,15 @@ export function OPTIONS(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+	try {
+		return await handleAudit(request)
+	} catch (err: any) {
+		console.error('Audit route crashed:', err)
+		return respond(request, { error: err?.message || 'Audit generation failed' }, 500)
+	}
+}
+
+async function handleAudit(request: NextRequest) {
 	const authHeader = request.headers.get('authorization')
 	const token = authHeader?.startsWith('Bearer ') ? authHeader.slice('Bearer '.length) : null
 
@@ -210,10 +219,17 @@ export async function POST(request: NextRequest) {
 	if (useMockAudit) {
 		result = createMockAuditResult(pageAudit)
 	} else {
+		if (!process.env.GROQ_API_KEY) {
+			return respond(request, { error: 'GROQ_API_KEY is not defined in environment' }, 500)
+		}
+		const openai = new OpenAI({
+			apiKey: process.env.GROQ_API_KEY,
+			baseURL: 'https://api.groq.com/openai/v1',
+		})
 		let completion
 		try {
 			completion = await openai.chat.completions.create({
-				model: 'gpt-4o-mini',
+				model: 'llama-3.3-70b-versatile',
 				response_format: { type: 'json_object' },
 				temperature: 0.7,
 				messages: [
@@ -231,7 +247,7 @@ export async function POST(request: NextRequest) {
 				return respond(
 					request,
 					{
-						error: 'The AI service rejected its API key. Update OPENAI_API_KEY in web/.env.local and restart the web server.',
+						error: 'The AI service rejected its API key. Update GROQ_API_KEY in web/.env.local and restart the web server.',
 						code: 'OPENAI_AUTH_FAILED',
 					},
 					503
@@ -242,7 +258,7 @@ export async function POST(request: NextRequest) {
 				return respond(
 					request,
 					{
-						error: 'The AI service rate or usage limit was reached. Check your OpenAI billing and limits.',
+						error: 'The AI service rate or usage limit was reached. Check your Groq usage and limits.',
 						code: 'OPENAI_LIMIT_REACHED',
 					},
 					503
