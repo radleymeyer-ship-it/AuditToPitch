@@ -4,7 +4,22 @@ import { createSupabaseServiceClient } from '@/lib/supabase/server'
 
 type LemonSqueezyEvent = {
 	meta?: { event_name?: string; custom_data?: { user_id?: unknown } }
-	data?: { attributes?: { status?: string } }
+	data?: { attributes?: { status?: string; user_email?: string } }
+}
+
+type ServiceClient = ReturnType<typeof createSupabaseServiceClient>
+
+const USERS_PER_PAGE = 1000
+
+async function findUserIdByEmail(supabase: ServiceClient, email: string) {
+	const target = email.trim().toLowerCase()
+	for (let page = 1; ; page++) {
+		const { data, error } = await supabase.auth.admin.listUsers({ page, perPage: USERS_PER_PAGE })
+		if (error) throw error
+		const match = data.users.find((user) => user.email?.toLowerCase() === target)
+		if (match) return match.id
+		if (data.users.length < USERS_PER_PAGE) return null
+	}
 }
 
 // A cancelled subscription keeps access until it expires.
@@ -41,12 +56,23 @@ export async function POST(request: NextRequest) {
 
 	const eventName = event.meta?.event_name
 	if (!eventName?.startsWith('subscription_')) {
+		console.info(`Lemon Squeezy webhook ignored: ${eventName ?? 'unknown event'}`)
 		return NextResponse.json({ received: true }, { status: 200 })
 	}
 
-	const userId = event.meta?.custom_data?.user_id
-	if (typeof userId !== 'string' || !userId) {
-		return NextResponse.json({ error: 'Missing user ID in custom data' }, { status: 400 })
+	const supabase = createSupabaseServiceClient()
+	const customUserId = event.meta?.custom_data?.user_id
+	const email = event.data?.attributes?.user_email
+	let userId = typeof customUserId === 'string' && customUserId ? customUserId : null
+
+	try {
+		if (!userId && email) userId = await findUserIdByEmail(supabase, email)
+	} catch {
+		return NextResponse.json({ error: 'Failed to look up user' }, { status: 500 })
+	}
+
+	if (!userId) {
+		return NextResponse.json({ error: 'No user ID in custom data and no matching email' }, { status: 400 })
 	}
 
 	const status = event.data?.attributes?.status
@@ -56,10 +82,10 @@ export async function POST(request: NextRequest) {
 		return NextResponse.json({ received: true }, { status: 200 })
 	}
 
-	const { error } = await createSupabaseServiceClient()
+	// Upsert so a user without a profile row still gets upgraded.
+	const { error } = await supabase
 		.from('profiles')
-		.update({ is_subscribed: isSubscribed })
-		.eq('id', userId)
+		.upsert({ id: userId, is_subscribed: isSubscribed }, { onConflict: 'id' })
 
 	if (error) {
 		return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 })
