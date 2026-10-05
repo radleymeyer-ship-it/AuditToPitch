@@ -16,6 +16,7 @@ type GeneratedAudit = {
   flaws_found: string[]
   video_script: string
   quick_summary: string
+  recommended_actions?: string[]
   free_audits_remaining: number | null
   mocked: boolean
 }
@@ -331,6 +332,7 @@ function App({ onAccountClick }: PopupProps) {
         audit,
         score: reportScore,
         findings: reportFindings,
+        recommendations: generatedAudit?.recommended_actions,
         quickSummary: generatedAudit?.quick_summary || 'Audit summary is not available.',
         pitchScript,
         logoDataUrl: auditPdfLogo,

@@ -41,6 +41,7 @@ const aiResultSchema = z.object({
 	flaws_found: z.array(z.string()),
 	video_script: z.string(),
 	quick_summary: z.string(),
+	recommended_actions: z.array(z.string()).optional(),
 })
 
 type AiResult = z.infer<typeof aiResultSchema>
@@ -51,8 +52,15 @@ Given structured metadata scraped from a prospect's website, you must:
 2. List the concrete flaws you found (flaws_found), e.g. missing meta description, no analytics tracking, missing alt text, no schema markup, weak SEO tags, etc.
 3. Write a 60-second cold pitch video script (video_script) formatted in Markdown with exactly these sections, in order: [Hook], [The Problem], [The Solution], [Call to Action]. Keep it conversational, punchy, and speakable in ~60 seconds.
 4. Write a 2-3 sentence quick_summary of the audit for an internal dashboard.
+5. Write recommended_actions: a string array with exactly one entry per flaws_found item, in the same order. Each entry MUST be a single sentence giving a specific technical remedy tied directly to that finding. Name the exact tag, attribute, or file involved, for example `og:image`, JSON-LD, `<link rel="canonical">`, `<meta name="description">`, `<h1>`, the `alt` attribute, GA4, or the Meta Pixel. Never use generic or placeholder advice such as "review against page goal", "improve SEO", or "optimize the page".
 
-Respond ONLY with a single JSON object with exactly these keys: overall_score (number), flaws_found (string array), video_script (string), quick_summary (string). Do not include any other keys or commentary.`
+Punctuation rules for video_script and all other text: always put a single space on both sides of a hyphen or em-dash used as a dash ("word - word", "word — word"); never write "word-word" or "word—word" for a dash. Ordinary hyphenated compound words (for example "cold-call") are fine.
+
+Respond ONLY with a single JSON object with exactly these keys: overall_score (number), flaws_found (string array), video_script (string), quick_summary (string), recommended_actions (string array). Do not include any other keys or commentary.`
+
+function spaceDashes(text: string) {
+	return text.replace(/\s*[\u2014\u2013]\s*/g, ' — ').replace(/(\w) ?- (\w)|(\w) -(\w)/g, (_m, a, b, c, d) => `${a ?? c} - ${b ?? d}`)
+}
 
 function respond(request: NextRequest, body: unknown, status: number) {
 	return NextResponse.json(body, {
@@ -286,7 +294,11 @@ async function handleAudit(request: NextRequest) {
 		if (!parsedResult.success) {
 			return respond(request, { error: 'AI response failed validation', details: parsedResult.error.flatten() }, 502)
 		}
-		result = parsedResult.data
+		result = {
+			...parsedResult.data,
+			video_script: spaceDashes(parsedResult.data.video_script),
+			quick_summary: spaceDashes(parsedResult.data.quick_summary),
+		}
 	}
 
 	if (!isSubscribed) {
@@ -332,6 +344,7 @@ async function handleAudit(request: NextRequest) {
 			flaws_found: result.flaws_found,
 			video_script: result.video_script,
 			quick_summary: result.quick_summary,
+			recommended_actions: result.recommended_actions,
 			is_subscribed: isSubscribed,
 			free_audits_remaining: isSubscribed ? null : freeAuditsRemaining,
 			mocked: useMockAudit,

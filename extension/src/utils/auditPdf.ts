@@ -5,6 +5,7 @@ type AuditPdfData = {
 	audit: PageAudit
 	score: number
 	findings: string[]
+	recommendations?: string[]
 	quickSummary: string
 	pitchScript: string
 	logoDataUrl?: string | null
@@ -23,7 +24,7 @@ function printableText(value: string) {
 	return value
 		.replace(/[\u2018\u2019]/g, "'")
 		.replace(/[\u201c\u201d]/g, '"')
-		.replace(/[\u2013\u2014]/g, '-')
+		.replace(/\s*[\u2013\u2014]\s*/g, ' - ')
 }
 
 export async function loadAuditLogo(): Promise<string | null> {
@@ -70,7 +71,7 @@ function recommendationForFinding(finding: string): string {
 	return 'Review this item against the page goal and prioritize the change most likely to improve qualified enquiries.'
 }
 
-export function downloadAuditPdf({ audit, score, findings, quickSummary, pitchScript, logoDataUrl }: AuditPdfData) {
+export function downloadAuditPdf({ audit, score, findings, recommendations, quickSummary, pitchScript, logoDataUrl }: AuditPdfData) {
 	const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' })
 	const pageWidth = pdf.internal.pageSize.getWidth()
 	const pageHeight = pdf.internal.pageSize.getHeight()
@@ -204,7 +205,7 @@ export function downloadAuditPdf({ audit, score, findings, quickSummary, pitchSc
 	for (const [index, finding] of reportFindings.entries()) {
 		const findingLines = getLines(finding, findingWidth - 26, 8.5, true)
 		const actionLines = getLines(
-			findings.length ? recommendationForFinding(finding) : 'Review the conversion journey and test whether the page turns visits into qualified enquiries.',
+			findings.length ? recommendations?.[index] || recommendationForFinding(finding) : 'Review the conversion journey and test whether the page turns visits into qualified enquiries.',
 			actionWidth,
 			8
 		)
