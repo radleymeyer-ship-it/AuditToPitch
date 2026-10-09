@@ -15,7 +15,7 @@ const sections = [
 				<ul>
 					<li><strong>Account details:</strong> your email address and account identifier, managed through Supabase Authentication.</li>
 					<li><strong>Audit information:</strong> website URLs you submit, page details collected for the audit, and the resulting findings and pitch scripts. Audit results are saved to your account.</li>
-					<li><strong>Payment information:</strong> subscription and transaction metadata, such as plan status and provider identifiers. Lemon Squeezy processes payments; we do not store full payment card details.</li>
+					<li><strong>Payment information:</strong> subscription and transaction metadata, such as plan status and provider identifiers. Paddle processes payments as our merchant of record; we do not store full payment card details.</li>
 				</ul>
 			</>
 		),
@@ -51,7 +51,7 @@ const sections = [
 				<li><strong>Supabase:</strong> account authentication, database, and saved audit storage.</li>
 				<li><strong>Vercel:</strong> website hosting and serverless functions.</li>
 				<li><strong>Google Gemini API:</strong> AI processing for audit findings and pitch scripts.</li>
-				<li><strong>Lemon Squeezy:</strong> subscription checkout and payment processing.</li>
+				<li><strong>Paddle:</strong> subscription checkout, payment processing, and billing as merchant of record.</li>
 			</ul>
 		),
 	},

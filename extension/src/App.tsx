@@ -96,9 +96,49 @@ function App({ onAccountClick }: PopupProps) {
   const [accountRetry, setAccountRetry] = useState(0)
   const [isUpgrading, setIsUpgrading] = useState(false)
   const [isSpeaking, setIsSpeaking] = useState(false)
+  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([])
+  const [selectedVoiceUri, setSelectedVoiceUri] = useState('')
+  const [voicePreferenceLoaded, setVoicePreferenceLoaded] = useState(false)
   const [auditPdfExporter, setAuditPdfExporter] = useState<AuditPdfExporter | null>(null)
   const [auditPdfLogo, setAuditPdfLogo] = useState<string | null>(null)
   const [isLoadingPdfEngine, setIsLoadingPdfEngine] = useState(false)
+
+  useEffect(() => {
+    if (typeof window.speechSynthesis === 'undefined') return
+
+    const updateVoices = () => {
+      setAvailableVoices(window.speechSynthesis.getVoices().filter((voice) => voice.lang.startsWith('en')))
+    }
+    const timeoutId = window.setTimeout(updateVoices, 0)
+    window.speechSynthesis.addEventListener('voiceschanged', updateVoices)
+
+    if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+      chrome.storage.local.get('auditToPitchVoiceUri', (result) => {
+        setSelectedVoiceUri(typeof result.auditToPitchVoiceUri === 'string' ? result.auditToPitchVoiceUri : '')
+        setVoicePreferenceLoaded(true)
+      })
+    } else {
+      setVoicePreferenceLoaded(true)
+    }
+
+    return () => {
+      window.clearTimeout(timeoutId)
+      window.speechSynthesis.removeEventListener('voiceschanged', updateVoices)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!voicePreferenceLoaded || availableVoices.length === 0) return
+    if (availableVoices.some((voice) => (voice.voiceURI || voice.name) === selectedVoiceUri)) return
+    const preferredVoice = availableVoices.find((voice) => /natural|neural|premium|enhanced/i.test(voice.name))
+      ?? availableVoices.find((voice) => voice.lang.toLowerCase().startsWith('en-us'))
+      ?? availableVoices[0]
+    const voiceUri = preferredVoice.voiceURI || preferredVoice.name
+    setSelectedVoiceUri(voiceUri)
+    if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+      chrome.storage.local.set({ auditToPitchVoiceUri: voiceUri })
+    }
+  }, [availableVoices, selectedVoiceUri, voicePreferenceLoaded])
 
   useEffect(() => {
     let isMounted = true
@@ -286,8 +326,9 @@ function App({ onAccountClick }: PopupProps) {
       return
     }
 
-    const utterance = new SpeechSynthesisUtterance(pitchScript)
-    const voice = window.speechSynthesis.getVoices().find((candidate) => candidate.lang.startsWith('en'))
+    const spokenScript = pitchScript.replace(/^\s{0,3}#{1,6}\s+/gm, '')
+    const utterance = new SpeechSynthesisUtterance(spokenScript)
+    const voice = availableVoices.find((candidate) => (candidate.voiceURI || candidate.name) === selectedVoiceUri)
     if (voice) utterance.voice = voice
     utterance.rate = 0.96
     utterance.onend = () => setIsSpeaking(false)
@@ -351,6 +392,15 @@ function App({ onAccountClick }: PopupProps) {
       window.setTimeout(() => setCopied(false), 1800)
     } catch {
       setError('Clipboard access is unavailable in this window.')
+    }
+  }
+
+  const selectVoice = (voiceUri: string) => {
+    setSelectedVoiceUri(voiceUri)
+    window.speechSynthesis.cancel()
+    setIsSpeaking(false)
+    if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+      chrome.storage.local.set({ auditToPitchVoiceUri: voiceUri })
     }
   }
 
@@ -469,6 +519,23 @@ function App({ onAccountClick }: PopupProps) {
               </p>
               <p className="max-h-[96px] overflow-y-auto text-[12px] leading-[1.6] text-ink/85">{pitchScript}</p>
               <div className="mt-3 flex items-center gap-2">
+                {availableVoices.length > 0 && (
+                  <label className="flex h-[32px] min-w-0 flex-1 items-center gap-1.5 rounded-md border border-line bg-panel px-2 text-[10px] text-muted">
+                    <span className="shrink-0">Voice</span>
+                    <select
+                      aria-label="Speech voice"
+                      value={selectedVoiceUri}
+                      onChange={(event) => selectVoice(event.target.value)}
+                      className="min-w-0 flex-1 bg-transparent text-[10px] text-ink outline-none"
+                    >
+                      {availableVoices.map((voice) => (
+                        <option key={voice.voiceURI || voice.name} value={voice.voiceURI || voice.name}>
+                          {voice.name} ({voice.lang})
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                )}
                 <button type="button" onClick={copyScript} className="inline-flex h-[32px] flex-1 items-center justify-center gap-1.5 rounded-full border border-mint/50 text-[11px] font-semibold text-brand transition hover:bg-mint hover:text-[#03120a]" aria-label="Copy pitch script">
                   {copied ? <Check size={13} /> : <Copy size={13} />}{copied ? 'Copied' : 'Copy script'}
                 </button>
