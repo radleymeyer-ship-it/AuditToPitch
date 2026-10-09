@@ -1,5 +1,5 @@
-import { useEffect, useState, type CSSProperties } from 'react'
-import { Check, ChevronRight, CircleAlert, Copy, Download, FileText, LockKeyhole, Pause, Play, RotateCcw, ScanLine, ShieldCheck, Sparkles } from 'lucide-react'
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
+import { Check, ChevronRight, CircleAlert, Copy, Download, LockKeyhole, Pause, Play, RotateCcw, ShieldCheck } from 'lucide-react'
 import type { PageAudit } from './types'
 import { loadExtensionAccount, type ExtensionSession } from './account'
 import './App.css'
@@ -23,6 +23,34 @@ type GeneratedAudit = {
 type AccountState = 'checking' | 'signed-out' | 'unsubscribed' | 'subscribed' | 'error'
 
 const loadingMessages = ['Scanning DOM...', 'Detecting Pixels...', 'Generating Pitch Script...']
+const scanProgress = [18, 52, 88]
+const FREE_AUDIT_TOTAL = 3
+
+type IconProps = { size?: number; className?: string }
+
+// Icon shapes copied from the popup.html design.
+function PopupIcon({ size = 14, className, children }: IconProps & { children: ReactNode }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      {children}
+    </svg>
+  )
+}
+
+const TagIcon = (props: IconProps) => <PopupIcon {...props}><path d="M12 2H2v10l9.3 9.3a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z" /><circle cx="7" cy="7" r="1.5" /></PopupIcon>
+const PixelsIcon = (props: IconProps) => <PopupIcon {...props}><circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="2.5" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3" /></PopupIcon>
+const SchemaIcon = (props: IconProps) => <PopupIcon {...props}><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1M16 21h1a2 2 0 0 0 2-2v-5a2 2 0 0 1 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1" /></PopupIcon>
+const GlobeIcon = (props: IconProps) => <PopupIcon {...props}><circle cx="12" cy="12" r="10" /><path d="M2 12h20M12 2a15 15 0 0 1 0 20a15 15 0 0 1 0-20" /></PopupIcon>
+const PdfIcon = (props: IconProps) => <PopupIcon {...props}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h5" /></PopupIcon>
+const PlayIcon = (props: IconProps) => <PopupIcon {...props}><path d="M6 4l14 8-14 8z" /></PopupIcon>
+const ScanPlayIcon = (props: IconProps) => <PopupIcon {...props}><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3" /><path d="M10 9l5 3-5 3z" /></PopupIcon>
+const SparkleIcon = (props: IconProps) => <PopupIcon {...props}><path d="M12 3q1 7 9 9q-8 2-9 9q-1-7-9-9q8-2 9-9z" /></PopupIcon>
+
+const checkTiles = [
+  { label: 'Metadata', hint: 'Titles, meta, OG', Icon: TagIcon },
+  { label: 'Pixels', hint: 'GA4, Meta, GTM', Icon: PixelsIcon },
+  { label: 'Schema', hint: 'Structured data', Icon: SchemaIcon },
+]
 
 function buildScript(audit: PageAudit): string {
   const title = audit.title || 'this page'
@@ -259,19 +287,36 @@ function App({ onAccountClick }: PopupProps) {
       setLoadingStep((step) => Math.min(step + 1, loadingMessages.length - 1))
     }, 700)
 
-    try {
-      chrome.tabs.sendMessage(activeTab.id, { type: 'RUN_PAGE_AUDIT' }, (response: AuditResponse | undefined) => {
+    const tabId = activeTab.id
+    const requestAudit = (canInject: boolean) => {
+      chrome.tabs.sendMessage(tabId, { type: 'RUN_PAGE_AUDIT' }, (response: AuditResponse | undefined) => {
         const deliveryError = chrome.runtime.lastError
-        window.clearInterval(interval)
 
-        if (deliveryError || response?.type !== 'PAGE_AUDIT_RESULT' || !response.data) {
-          setLoading(false)
-          setError('Could not reach the page scanner. Reload this page and try again.')
+        // Tabs opened before the extension was installed or reloaded have no scanner yet.
+        if (deliveryError && canInject && chrome.scripting) {
+          chrome.scripting.executeScript({ target: { tabId }, files: ['content.js'] })
+            .then(() => requestAudit(false))
+            .catch(() => failScan())
           return
         }
 
+        if (deliveryError || response?.type !== 'PAGE_AUDIT_RESULT' || !response.data) {
+          failScan()
+          return
+        }
+
+        window.clearInterval(interval)
         void saveAudit(response.data)
       })
+    }
+    const failScan = () => {
+      window.clearInterval(interval)
+      setLoading(false)
+      setError('Could not reach the page scanner. Reload this page and try again.')
+    }
+
+    try {
+      requestAudit(true)
     } catch {
       window.clearInterval(interval)
       setLoading(false)
@@ -408,27 +453,24 @@ function App({ onAccountClick }: PopupProps) {
   const displayedBadges = generatedAudit?.flaws_found.length ? generatedAudit.flaws_found : missingBadges
   const needsAccount = accountState === 'signed-out' || accountState === 'unsubscribed'
   const verdict = reportScore >= 80 ? 'Good foundation' : reportScore >= 60 ? 'Room to improve' : 'Needs attention'
-  const planLabel = accountState === 'checking'
-    ? 'Checking'
-    : isSubscribed
-      ? 'Pro'
-      : accountState === 'unsubscribed'
-        ? `Free · ${freeAuditsRemaining} left`
-        : 'Free'
 
   return (
     <div className="audit-popup flex h-[500px] w-[380px] flex-col overflow-hidden text-ink">
       <header className="flex shrink-0 items-center justify-between gap-3 border-b border-line bg-panel/80 px-4 py-2.5 backdrop-blur">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2">
-            <img src="/brand-mark.svg" alt="" width={28} height={28} className="h-7 w-7 shrink-0" />
-            <span className="text-[15px] font-bold leading-none tracking-tight">AuditToPitch <span className="text-brand">Pro</span></span>
-          </div>
-          <p className="mt-1 truncate pl-9 text-[10px] text-muted" title={activeTab?.url}>{getHost(activeTab?.url)}</p>
+        <div className="flex min-w-0 items-center gap-2">
+          <img src="/brand-mark.svg" alt="" width={28} height={28} className="h-7 w-7 shrink-0" />
+          <span className="truncate text-[15px] font-bold leading-none tracking-tight">AuditToPitch <span className="text-brand">Pro</span></span>
         </div>
-        <span className={`shrink-0 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.08em] ${isSubscribed ? 'bg-mint text-[#03120a]' : 'border border-mint/50 text-brand'}`}>
-          {planLabel}
-        </span>
+        {isSubscribed ? (
+          <span className="shrink-0 rounded-full bg-mint px-3 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-[#03120a]">Pro</span>
+        ) : accountState === 'unsubscribed' ? (
+          <span className="meter" aria-label={`${freeAuditsRemaining} free audits left`}>
+            <i aria-hidden="true">{Array.from({ length: FREE_AUDIT_TOTAL }, (_, index) => <s key={index} className={index < freeAuditsRemaining ? 'on' : ''} />)}</i>
+            {freeAuditsRemaining} {freeAuditsRemaining === 1 ? 'audit' : 'audits'} left
+          </span>
+        ) : (
+          <span className="shrink-0 rounded-full border border-mint/50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-brand">{accountState === 'checking' ? 'Checking' : 'Free'}</span>
+        )}
       </header>
 
       <main className="flex min-h-0 flex-1 flex-col">
@@ -456,34 +498,6 @@ function App({ onAccountClick }: PopupProps) {
             <p className="mt-1 truncate text-[11px] text-muted">Signed in as {session?.user.email || 'your account'}</p>
             <p className="mt-2 text-[11px] leading-relaxed text-muted">Upgrade to Pro for unlimited audits and tailored pitch scripts.</p>
             {error && <p className="mt-3 text-[10px] text-alert" role="alert">{error}</p>}
-          </section>
-        ) : loading ? (
-          <section className="flex min-h-0 flex-1 flex-col px-4 py-4" aria-live="polite" aria-busy="true">
-            <div className="mb-4 flex items-center gap-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-mint/30 bg-mint/10 text-brand"><Sparkles size={17} /></span>
-              <div className="min-w-0">
-                <p className="text-[14px] font-semibold">Scanning your prospect</p>
-                <p className="mt-0.5 truncate text-[11px] text-muted">{activeTab?.title || 'Current tab'}</p>
-              </div>
-            </div>
-            <div className="scan-window mb-4" aria-hidden="true">
-              <div className="flex items-center gap-1.5 text-[10px] text-muted">
-                <i className="h-2 w-2 rounded-full bg-line" /><i className="h-2 w-2 rounded-full bg-line" /><i className="h-2 w-2 rounded-full bg-line" />
-                <span className="ml-2 truncate rounded-full bg-raised px-3 py-0.5">{getHost(activeTab?.url)}</span>
-              </div>
-              <div className="mt-4 h-3 w-3/5 rounded bg-raised" />
-              <div className="mt-2.5 h-3 w-2/5 rounded bg-raised" />
-              <div className="mt-2.5 h-3 w-1/2 rounded bg-raised" />
-              <div className="scan-line" />
-            </div>
-            <div className="space-y-2">
-              {loadingMessages.map((message, index) => (
-                <div key={message} className={`flex items-center gap-2.5 rounded-[10px] px-3 py-2.5 transition-colors ${index === loadingStep ? 'bg-mint/10 text-brand' : 'text-muted'}`}>
-                  {index < loadingStep ? <Check size={14} /> : <span className={`h-3.5 w-3.5 rounded-full border ${index === loadingStep ? 'animate-pulse border-mint bg-mint/30' : 'border-line'}`} />}
-                  <span className="text-[12px] font-medium">{message}</span>
-                </div>
-              ))}
-            </div>
           </section>
         ) : audit ? (
           <section className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-4 pb-4 pt-3">
@@ -551,46 +565,61 @@ function App({ onAccountClick }: PopupProps) {
             {error && <p className="text-[10px] text-alert" role="alert">{error}</p>}
           </section>
         ) : (
-          <section className="flex min-h-0 flex-1 flex-col px-4 pb-4 pt-4">
-            <div className="mb-4">
+          <section className="flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto px-4 pb-3 pt-3" aria-live="polite" aria-busy={loading}>
+            <div>
               <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-brand">Ready when you are</p>
-              <p className="mt-1.5 text-[20px] font-bold leading-tight tracking-tight">Audit any site<br /><span className="inline-block rounded-xl bg-[#03120a] px-2.5 py-0.5 text-mint">in 10 seconds.</span></p>
+              <p className="mt-1 text-[22px] font-extrabold leading-[1.05] tracking-tight">Audit any site<br /><span className="inline-block rounded-lg bg-[#03120a] px-2 py-0.5 text-mint">in 10 seconds.</span></p>
+              <p className="mt-1.5 text-[11px] leading-[1.45] text-muted">Scan tags, pixels and schema, then get a white-label report and a Loom pitch script.</p>
             </div>
 
-            <div className="mb-3 flex min-h-[58px] items-center gap-3 rounded-2xl border border-line bg-panel px-3.5 py-3">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-raised text-muted"><FileText size={15} /></span>
+            <div className={`target ${loading ? 'scanning' : ''}`}>
+              <span className="bk a" /><span className="bk b" /><span className="bk c" /><span className="bk d" />
+              {loading && <div className="sweep" aria-hidden="true" />}
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] border border-line bg-panel text-brand"><GlobeIcon size={16} /></span>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[12px] font-semibold">{activeTab?.title || 'Loading active tab...'}</p>
                 <p className="mt-0.5 truncate text-[10px] text-muted">{getHost(activeTab?.url)}</p>
               </div>
-              <ChevronRight size={15} className="shrink-0 text-muted" />
+              <span className={`shrink-0 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.08em] ${loading ? 'bg-[#03120a] text-mint' : 'border border-mint/50 text-brand'}`}>{loading ? 'Scanning' : 'Ready'}</span>
             </div>
 
-            <div className="mb-3 grid grid-cols-3 gap-2">
-              {['Metadata', 'Pixels', 'Schema'].map((item, index) => (
-                <div key={item} className="flex h-[48px] flex-col justify-center rounded-xl border border-line bg-panel px-2.5">
-                  <span className="text-[9px] font-semibold uppercase tracking-[0.08em] text-muted">0{index + 1}</span>
-                  <span className="mt-0.5 text-[11px] font-medium text-ink">{item}</span>
+            <div className="grid grid-cols-3 gap-2">
+              {checkTiles.map(({ label, hint, Icon }) => (
+                <div key={label} className="flex flex-col gap-0.5 rounded-xl border border-line bg-panel px-2.5 py-2">
+                  <Icon size={14} className="text-brand" />
+                  <span className="mt-0.5 text-[11px] font-semibold text-ink">{label}</span>
+                  <span className="text-[9px] leading-tight text-muted">{hint}</span>
                 </div>
               ))}
             </div>
 
-            {!isSubscribed && accountState === 'unsubscribed' && <p className="mb-2 text-[10px] font-medium text-brand">{freeAuditsRemaining} free {freeAuditsRemaining === 1 ? 'audit' : 'audits'} remaining</p>}
+            <div className="flex items-center gap-2 text-[10px] text-muted">
+              <span className="font-medium">You get</span>
+              <em className="inline-flex items-center gap-1 rounded-full border border-line bg-panel px-2 py-0.5 not-italic text-ink"><PdfIcon size={11} className="text-brand" />PDF report</em>
+              <em className="inline-flex items-center gap-1 rounded-full border border-line bg-panel px-2 py-0.5 not-italic text-ink"><PlayIcon size={11} className="text-brand" />Loom script</em>
+            </div>
 
-            <button type="button" onClick={runAudit} disabled={loading || !activeTab || (!isSubscribed && freeAuditsRemaining <= 0)} className="mt-auto flex h-[48px] w-full items-center justify-center gap-2 rounded-2xl bg-mint text-[13px] font-bold text-[#03120a] shadow-[0_0_28px_rgb(28_240_140/40%)] transition hover:brightness-110 disabled:cursor-wait disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint">
-              <ScanLine size={16} />Run 10-Second Audit
+            <div className="prog">
+              <p><span>{loading ? loadingMessages[loadingStep] : 'Waiting to scan'}</span><b>{loading ? scanProgress[loadingStep] : 0}%</b></p>
+              <div className="bar"><i style={{ '--p': `${loading ? scanProgress[loadingStep] : 0}%` } as CSSProperties} /></div>
+            </div>
+
+            <button type="button" onClick={runAudit} disabled={loading || !activeTab || (!isSubscribed && freeAuditsRemaining <= 0)} className="mt-auto flex h-[46px] w-full shrink-0 items-center justify-center gap-2 rounded-2xl bg-mint text-[13px] font-bold text-[#03120a] shadow-[0_0_24px_rgb(28_240_140/35%)] transition hover:brightness-110 disabled:cursor-wait disabled:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint">
+              {loading ? <SparkleIcon size={16} /> : <ScanPlayIcon size={16} />}{loading ? 'Scanning…' : 'Run 10-Second Audit'}
             </button>
-            {error && <p className="mt-2 flex items-center gap-1.5 text-[10px] text-alert" role="alert"><CircleAlert size={12} />{error}</p>}
+            {error && <p className="flex items-center gap-1.5 text-[10px] text-alert" role="alert"><CircleAlert size={12} />{error}</p>}
           </section>
         )}
       </main>
 
-      {needsAccount && (
-        <footer className="flex h-[49px] shrink-0 items-center justify-between border-t border-line bg-panel px-4">
-          <span className="flex items-center gap-1.5 text-[10px] text-muted"><LockKeyhole size={12} />{accountState === 'signed-out' ? 'Connect your account' : `${freeAuditsRemaining} free left`}</span>
-          <button type="button" onClick={accountState === 'signed-out' ? onAccountClick : startUpgrade} disabled={isUpgrading} className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand transition hover:text-ink focus-visible:underline disabled:cursor-wait disabled:opacity-60">{accountState === 'signed-out' ? 'Sign In' : isUpgrading ? 'Opening checkout...' : 'Upgrade to Pro'}<ChevronRight size={13} /></button>
-        </footer>
-      )}
+      <footer className="flex h-[42px] shrink-0 items-center justify-between border-t border-line bg-panel px-4">
+        <span className="flex items-center gap-1.5 text-[10px] text-muted"><LockKeyhole size={12} />{accountState === 'signed-out' ? 'Connect your account' : isSubscribed ? 'Pro plan' : 'Free plan'}</span>
+        {needsAccount && (
+          <button type="button" onClick={accountState === 'signed-out' ? onAccountClick : startUpgrade} disabled={isUpgrading} className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand transition hover:text-ink focus-visible:underline disabled:cursor-wait disabled:opacity-60">
+            {accountState !== 'signed-out' && <SparkleIcon size={12} />}{accountState === 'signed-out' ? 'Sign In' : isUpgrading ? 'Opening checkout...' : 'Upgrade to Pro'}<ChevronRight size={13} />
+          </button>
+        )}
+      </footer>
     </div>
   )
 }

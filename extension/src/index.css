@@ -107,51 +107,116 @@ p {
   font-weight: 800;
 }
 
-.scan-window {
+.target {
   position: relative;
-  height: 150px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   overflow: hidden;
-  border-radius: 16px;
-  background: #041009;
   padding: 12px 14px;
-  box-shadow: 0 0 0 1px rgb(28 240 140 / 25%) inset;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
 }
 
-.scan-window .bg-raised {
-  background: #0f2a1f;
-}
-
-.scan-window .bg-line {
-  background: #1c3629;
-}
-
-.scan-window {
-  color: #96aa9e;
-}
-
-.scan-line {
+.target .bk {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 20%;
-  height: 3px;
-  background: var(--mint);
-  box-shadow: 0 0 22px 6px rgb(28 240 140 / 50%);
-  animation: scan 1.6s ease-in-out infinite alternate;
+  width: 10px;
+  height: 10px;
+  border: 0 solid var(--mint);
+  pointer-events: none;
 }
 
-@keyframes scan {
+.target .bk.a { top: 4px; left: 4px; border-top-width: 2px; border-left-width: 2px; border-top-left-radius: 4px; }
+.target .bk.b { top: 4px; right: 4px; border-top-width: 2px; border-right-width: 2px; border-top-right-radius: 4px; }
+.target .bk.c { bottom: 4px; left: 4px; border-bottom-width: 2px; border-left-width: 2px; border-bottom-left-radius: 4px; }
+.target .bk.d { bottom: 4px; right: 4px; border-bottom-width: 2px; border-right-width: 2px; border-bottom-right-radius: 4px; }
+
+.target .sweep {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 42px;
+  background: linear-gradient(90deg, transparent, rgb(28 240 140 / 28%), transparent);
+  animation: sweep 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes sweep {
   to {
-    top: 88%;
+    transform: translateX(300px);
   }
+}
+
+.meter {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid rgb(28 240 140 / 50%);
+  border-radius: 999px;
+  color: var(--brand);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.meter i {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.meter s {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--line);
+  text-decoration: none;
+}
+
+.meter s.on {
+  background: var(--mint);
+  box-shadow: 0 0 6px rgb(28 240 140 / 70%);
+}
+
+.prog p {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.prog p b {
+  color: var(--brand);
+}
+
+.prog .bar {
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dfe7e2;
+}
+
+.prog .bar i {
+  display: block;
+  width: var(--p);
+  height: 100%;
+  border-radius: inherit;
+  background: var(--mint);
+  box-shadow: 0 0 10px rgb(28 240 140 / 60%);
+  transition: width 0.5s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scan-line {
+  .target .sweep {
     animation: none;
   }
-}
 
+  .prog .bar i {
+    transition: none;
+  }
+}
 @media print {
   body,
   #root,
