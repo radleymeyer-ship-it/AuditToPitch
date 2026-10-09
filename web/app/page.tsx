@@ -694,6 +694,10 @@ export default function Home() {
                 </span>
               </a>
               <span>Audit websites. Generate pitches. Win clients.</span>
+              <nav className="legal" aria-label="Legal">
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/terms">Terms of Service</a>
+              </nav>
             </footer>
           </div>
         </section>

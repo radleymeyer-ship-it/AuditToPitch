@@ -903,6 +903,14 @@
           color: var(--mu);
           font-size: 14px;
         }
+        .atp footer .legal {
+          display: flex;
+          gap: 22px;
+          padding: 0;
+        }
+        .atp footer .legal a:hover {
+          color: var(--g);
+        }
         @media (max-width: 900px) {
           .atp .hero,
           .atp .two,
