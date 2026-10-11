@@ -20,8 +20,7 @@ export const metadata: Metadata = {
   icons: { icon: "/brand-mark.png", shortcut: "/brand-mark.png", apple: "/brand-mark.png" },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
-  return (
+export default function RootLayout({ children }: { children: React.ReactNode }) {  return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
