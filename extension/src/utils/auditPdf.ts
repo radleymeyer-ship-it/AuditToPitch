@@ -7,7 +7,7 @@ type AuditPdfData = {
 	findings: string[]
 	recommendations?: string[]
 	quickSummary: string
-	pitchScript: string
+	presentationScript: string
 	logoDataUrl?: string | null
 }
 
@@ -59,19 +59,19 @@ export async function loadAuditLogo(): Promise<string | null> {
 
 function recommendationForFinding(finding: string): string {
 	const normalized = finding.toLowerCase()
-	if (normalized.includes('google analytics 4')) return 'Install GA4 and configure lead events to connect campaign traffic with enquiries.'
-	if (normalized.includes('meta pixel')) return 'Add the Meta Pixel and verify conversion events for campaign optimization.'
+	if (normalized.includes('google analytics 4')) return 'Install GA4 and verify key events so the client can measure relevant site activity.'
+	if (normalized.includes('meta pixel')) return 'Add the Meta Pixel and verify the events required for the client measurement plan.'
 	if (normalized.includes('tag manager')) return 'Centralize marketing tags so tracking changes can be reviewed and maintained consistently.'
-	if (normalized.includes('meta description')) return 'Write a concise search description that communicates the offer and encourages qualified clicks.'
+	if (normalized.includes('meta description')) return 'Write a concise search description that accurately summarizes the page content.'
 	if (normalized.includes('h1')) return 'Add one descriptive H1 that makes the page offer clear to visitors and search engines.'
 	if (normalized.includes('alt text')) return 'Add concise alt text to meaningful images for accessibility and search context.'
 	if (normalized.includes('structured data')) return 'Add structured data relevant to the organization and the page content.'
 	if (normalized.includes('canonical')) return 'Set a canonical URL to clarify the preferred page when similar URLs exist.'
 	if (normalized.includes('social sharing image')) return 'Set a branded social preview image to make shared links more recognizable.'
-	return 'Review this item against the page goal and prioritize the change most likely to improve qualified enquiries.'
+	return 'Review this item against the client website goals and document the recommended change.'
 }
 
-export function downloadAuditPdf({ audit, score, findings, recommendations, quickSummary, pitchScript, logoDataUrl }: AuditPdfData) {
+export function downloadAuditPdf({ audit, score, findings, recommendations, quickSummary, presentationScript, logoDataUrl }: AuditPdfData) {
 	const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' })
 	const pageWidth = pdf.internal.pageSize.getWidth()
 	const pageHeight = pdf.internal.pageSize.getHeight()
@@ -205,7 +205,7 @@ export function downloadAuditPdf({ audit, score, findings, recommendations, quic
 	for (const [index, finding] of reportFindings.entries()) {
 		const findingLines = getLines(finding, findingWidth - 26, 8.5, true)
 		const actionLines = getLines(
-			findings.length ? recommendations?.[index] || recommendationForFinding(finding) : 'Review the conversion journey and test whether the page turns visits into qualified enquiries.',
+			findings.length ? recommendations?.[index] || recommendationForFinding(finding) : 'Review the client website goals and document any additional recommendations.',
 			actionWidth,
 			8
 		)
@@ -258,19 +258,19 @@ export function downloadAuditPdf({ audit, score, findings, recommendations, quic
 		y += 14
 	}
 
-	writeSectionTitle('Client Presentation Script')
-	const pitchLines = getLines(pitchScript, contentWidth - 26, 9, false)
-	const pitchHeight = Math.max(46, pitchLines.length * 13 + 22)
-	ensureSpace(pitchHeight + 8)
+	writeSectionTitle('Video Presentation Script')
+	const presentationLines = getLines(presentationScript, contentWidth - 26, 9, false)
+	const presentationHeight = Math.max(46, presentationLines.length * 13 + 22)
+	ensureSpace(presentationHeight + 8)
 	pdf.setFillColor(...COLORS.soft)
-	pdf.roundedRect(margin, y, contentWidth, pitchHeight, 5, 5, 'F')
+	pdf.roundedRect(margin, y, contentWidth, presentationHeight, 5, 5, 'F')
 	pdf.setFillColor(...COLORS.mint)
-	pdf.rect(margin, y, 3, pitchHeight, 'F')
+	pdf.rect(margin, y, 3, presentationHeight, 'F')
 	pdf.setFont('helvetica', 'normal')
 	pdf.setFontSize(9)
 	pdf.setTextColor(...COLORS.ink)
-	pdf.text(pitchLines, margin + 13, y + 17)
-	y += pitchHeight + 8
+	pdf.text(presentationLines, margin + 13, y + 17)
+	y += presentationHeight + 8
 
 	const pageCount = pdf.getNumberOfPages()
 	for (let page = 1; page <= pageCount; page += 1) {

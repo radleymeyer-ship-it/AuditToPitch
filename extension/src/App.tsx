@@ -62,10 +62,10 @@ function buildScript(audit: PageAudit): string {
   ].filter(Boolean)
 
   if (issues.length === 0) {
-    return `We took a closer look at ${title}. The technical foundation is in good shape, with the key search signals and structured data in place. That gives your content a stronger chance to stand out in search and social previews.`
+    return `The diagnostic review of ${title} found no missing critical metadata or structured data. The site's key technical signals are present.`
   }
 
-  return `We took a closer look at ${title} and found a few opportunities worth fixing: ${issues.join(', ')}. These small technical gaps can make it harder for search engines and social platforms to understand and showcase your page. A focused cleanup could make this page work harder for your business.`
+  return `The diagnostic review of ${title} identified these items for client review: ${issues.join(', ')}. Recommended actions are included in the audit report.`
 }
 
 function getScore(audit: PageAudit): number {
@@ -354,12 +354,12 @@ function App({ onAccountClick }: PopupProps) {
     }
   }
 
-  const pitchScript = generatedAudit?.video_script || (audit ? buildScript(audit) : '')
+  const presentationScript = generatedAudit?.video_script || (audit ? buildScript(audit) : '')
   const reportFindings = generatedAudit?.flaws_found ?? (audit ? getMissingBadges(audit) : [])
   const reportScore = generatedAudit?.overall_score ?? (audit ? getScore(audit) : 0)
 
   const toggleVoicePreview = () => {
-    if (!pitchScript) return
+    if (!presentationScript) return
     if (typeof window.speechSynthesis === 'undefined') {
       setError('Voice preview is not available in this browser.')
       return
@@ -371,7 +371,7 @@ function App({ onAccountClick }: PopupProps) {
       return
     }
 
-    const spokenScript = pitchScript.replace(/^\s{0,3}#{1,6}\s+/gm, '')
+    const spokenScript = presentationScript.replace(/^\s{0,3}#{1,6}\s+/gm, '')
     const utterance = new SpeechSynthesisUtterance(spokenScript)
     const voice = availableVoices.find((candidate) => (candidate.voiceURI || candidate.name) === selectedVoiceUri)
     if (voice) utterance.voice = voice
@@ -420,7 +420,7 @@ function App({ onAccountClick }: PopupProps) {
         findings: reportFindings,
         recommendations: generatedAudit?.recommended_actions,
         quickSummary: generatedAudit?.quick_summary || 'Audit summary is not available.',
-        pitchScript,
+        presentationScript,
         logoDataUrl: auditPdfLogo,
       })
       setError('')
@@ -430,9 +430,9 @@ function App({ onAccountClick }: PopupProps) {
   }
 
   const copyScript = async () => {
-    if (!pitchScript) return
+    if (!presentationScript) return
     try {
-      await navigator.clipboard.writeText(pitchScript)
+      await navigator.clipboard.writeText(presentationScript)
       setCopied(true)
       window.setTimeout(() => setCopied(false), 1800)
     } catch {
@@ -531,7 +531,7 @@ function App({ onAccountClick }: PopupProps) {
                 <span>Video Presentation Script</span>
                 {generatedAudit?.mocked && <span className="rounded-full border border-amber/40 px-2 py-0.5 text-amber">Demo result</span>}
               </p>
-              <p className="max-h-[96px] overflow-y-auto text-[12px] leading-[1.6] text-ink/85">{pitchScript}</p>
+              <p className="max-h-[96px] overflow-y-auto text-[12px] leading-[1.6] text-ink/85">{presentationScript}</p>
               <div className="mt-3 flex items-center gap-2">
                 {availableVoices.length > 0 && (
                   <label className="flex h-[32px] min-w-0 flex-1 items-center gap-1.5 rounded-md border border-line bg-panel px-2 text-[10px] text-muted">
@@ -568,7 +568,7 @@ function App({ onAccountClick }: PopupProps) {
           <section className="flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto px-4 pb-3 pt-3" aria-live="polite" aria-busy={loading}>
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-brand">Ready when you are</p>
-              <p className="mt-1 text-[22px] font-extrabold leading-[1.05] tracking-tight">Audit any site<br /><span className="inline-block rounded-lg bg-[#03120a] px-2 py-0.5 text-mint">in 10 seconds.</span></p>
+              <p className="mt-1 text-[22px] font-extrabold leading-[1.05] tracking-tight">Audit client site<br /><span className="inline-block rounded-lg bg-[#03120a] px-2 py-0.5 text-mint">in 10 seconds.</span></p>
               <p className="mt-1.5 text-[11px] leading-[1.45] text-muted">Scan tags, pixels, and schema, then prepare a white-label diagnostic report and video presentation script.</p>
             </div>
 
