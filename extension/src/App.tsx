@@ -22,7 +22,7 @@ type GeneratedAudit = {
 }
 type AccountState = 'checking' | 'signed-out' | 'unsubscribed' | 'subscribed' | 'error'
 
-const loadingMessages = ['Scanning DOM...', 'Detecting Pixels...', 'Generating Pitch Script...']
+const loadingMessages = ['Scanning DOM...', 'Detecting Pixels...', 'Preparing Presentation Summary...']
 const scanProgress = [18, 52, 88]
 const FREE_AUDIT_TOTAL = 3
 
@@ -496,7 +496,7 @@ function App({ onAccountClick }: PopupProps) {
             <div className="flex h-10 w-10 items-center justify-center rounded-[10px] border border-mint/20 bg-mint/10 text-brand"><ShieldCheck size={18} /></div>
             <p className="mt-4 text-[14px] font-semibold">Your 3 free audits are used</p>
             <p className="mt-1 truncate text-[11px] text-muted">Signed in as {session?.user.email || 'your account'}</p>
-            <p className="mt-2 text-[11px] leading-relaxed text-muted">Upgrade to Pro for unlimited audits and tailored pitch scripts.</p>
+            <p className="mt-2 text-[11px] leading-relaxed text-muted">Upgrade to Pro for unlimited client diagnostics and presentation summaries.</p>
             {error && <p className="mt-3 text-[10px] text-alert" role="alert">{error}</p>}
           </section>
         ) : audit ? (
@@ -528,7 +528,7 @@ function App({ onAccountClick }: PopupProps) {
 
             <div className="shrink-0 rounded-2xl border border-mint/40 bg-raised px-4 py-3">
               <p className="mb-2 flex items-center justify-between gap-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-brand">
-                <span>AI pitch script</span>
+                <span>Video Presentation Script</span>
                 {generatedAudit?.mocked && <span className="rounded-full border border-amber/40 px-2 py-0.5 text-amber">Demo result</span>}
               </p>
               <p className="max-h-[96px] overflow-y-auto text-[12px] leading-[1.6] text-ink/85">{pitchScript}</p>
@@ -550,7 +550,7 @@ function App({ onAccountClick }: PopupProps) {
                     </select>
                   </label>
                 )}
-                <button type="button" onClick={copyScript} className="inline-flex h-[32px] flex-1 items-center justify-center gap-1.5 rounded-full border border-mint/50 text-[11px] font-semibold text-brand transition hover:bg-mint hover:text-[#03120a]" aria-label="Copy pitch script">
+                <button type="button" onClick={copyScript} className="inline-flex h-[32px] flex-1 items-center justify-center gap-1.5 rounded-full border border-mint/50 text-[11px] font-semibold text-brand transition hover:bg-mint hover:text-[#03120a]" aria-label="Copy presentation script">
                   {copied ? <Check size={13} /> : <Copy size={13} />}{copied ? 'Copied' : 'Copy script'}
                 </button>
                 <button type="button" onClick={toggleVoicePreview} className="inline-flex h-[32px] flex-1 items-center justify-center gap-1.5 rounded-full border border-line text-[11px] font-semibold text-ink transition hover:border-mint">
@@ -569,7 +569,7 @@ function App({ onAccountClick }: PopupProps) {
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-brand">Ready when you are</p>
               <p className="mt-1 text-[22px] font-extrabold leading-[1.05] tracking-tight">Audit any site<br /><span className="inline-block rounded-lg bg-[#03120a] px-2 py-0.5 text-mint">in 10 seconds.</span></p>
-              <p className="mt-1.5 text-[11px] leading-[1.45] text-muted">Scan tags, pixels and schema, then get a white-label report and a Loom pitch script.</p>
+              <p className="mt-1.5 text-[11px] leading-[1.45] text-muted">Scan tags, pixels, and schema, then prepare a white-label diagnostic report and video presentation script.</p>
             </div>
 
             <div className={`target ${loading ? 'scanning' : ''}`}>
@@ -596,7 +596,7 @@ function App({ onAccountClick }: PopupProps) {
             <div className="flex items-center gap-2 text-[10px] text-muted">
               <span className="font-medium">You get</span>
               <em className="inline-flex items-center gap-1 rounded-full border border-line bg-panel px-2 py-0.5 not-italic text-ink"><PdfIcon size={11} className="text-brand" />PDF report</em>
-              <em className="inline-flex items-center gap-1 rounded-full border border-line bg-panel px-2 py-0.5 not-italic text-ink"><PlayIcon size={11} className="text-brand" />Loom script</em>
+              <em className="inline-flex items-center gap-1 rounded-full border border-line bg-panel px-2 py-0.5 not-italic text-ink"><PlayIcon size={11} className="text-brand" />Presentation script</em>
             </div>
 
             <div className="prog">

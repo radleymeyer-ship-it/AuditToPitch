@@ -3,8 +3,8 @@ import { Download, ScanSearch, Video } from 'lucide-react'
 const STEPS = [
 	{
 		icon: Download,
-		title: 'Install & Open',
-			description: 'Open the client website requested for an audit in Chrome.',
+		title: 'Select a Client Website',
+		description: 'Open the client website requested for an audit in Chrome.',
 	},
 	{
 		icon: ScanSearch,
@@ -26,7 +26,7 @@ export function HowItWorks() {
 			<div className="mx-auto max-w-6xl px-6">
 				<div className="mx-auto max-w-2xl text-center">
 					<h2 className="text-3xl font-bold text-ink sm:text-4xl">
-						How It Works
+						Streamline your client audit workflow
 					</h2>
 					<p className="mt-4 text-lg text-muted">
 						From requested site to client-ready discovery proposal in three steps.

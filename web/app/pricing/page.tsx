@@ -28,7 +28,7 @@ export default async function PricingPage() {
 					<p className="text-xs font-semibold uppercase text-brand-light">AuditToPitch Pro</p>
 					<h1 className="mt-3 text-3xl font-bold text-ink sm:text-4xl">Upgrade your workspace</h1>
 					<p className="mt-3 max-w-lg text-sm leading-6 text-muted">
-						Get full access to automated website audits and AI-generated pitch scripts for your agency outreach.
+						Get full access to automated client website diagnostics, video presentation scripts, and summary reports.
 					</p>
 					<div className="mt-7">
 						<CheckoutButton userId={user.id} userEmail={user.email} />

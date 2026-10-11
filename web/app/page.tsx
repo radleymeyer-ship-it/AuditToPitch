@@ -193,21 +193,21 @@ export default function Home() {
       }
 
       y += 10;
-      const pitch = `Hi John, I'm from ${displayName}. I audited your website and found several things that are likely costing you customers...`;
-      const pitchLines = pdf.splitTextToSize(pitch, pageWidth - margin * 2 - 28) as string[];
-      const pitchHeight = pitchLines.length * 14 + 24;
+      const presentation = "This diagnostic report summarizes the website findings and recommended next steps for client review.";
+      const presentationLines = pdf.splitTextToSize(presentation, pageWidth - margin * 2 - 28) as string[];
+      const presentationHeight = presentationLines.length * 14 + 24;
       pdf.setFillColor(236, 247, 240);
-      pdf.roundedRect(margin, y, pageWidth - margin * 2, pitchHeight, 6, 6, "F");
+      pdf.roundedRect(margin, y, pageWidth - margin * 2, presentationHeight, 6, 6, "F");
       pdf.setFillColor(primary[0], primary[1], primary[2]);
-      pdf.rect(margin, y, 4, pitchHeight, "F");
+      pdf.rect(margin, y, 4, presentationHeight, "F");
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(9);
       pdf.setTextColor(ink[0], ink[1], ink[2]);
-      pdf.text("Pitch script", margin + 16, y + 16);
+      pdf.text("Presentation script", margin + 16, y + 16);
       pdf.setFont("helvetica", "normal");
       pdf.setFontSize(9);
       pdf.setTextColor(muted[0], muted[1], muted[2]);
-      pdf.text(pitchLines, margin + 16, y + 30);
+      pdf.text(presentationLines, margin + 16, y + 30);
 
       pdf.addPage();
       drawHeader("NEXT STEPS");
@@ -292,15 +292,14 @@ export default function Home() {
             <div className="hero">
               <div>
                 <h1>
-                  Find what&apos;s broken. <span>Get paid to fix it.</span>
+                  Inbound Client Diagnostics. <span>Clear Website Reporting.</span>
                 </h1>
                 <p>
-                  Turn any prospect&apos;s website into a $500 audit report and a ready-to-record pitch script in 10
-                  seconds. Whitelabeled with your agency name.
+                  Turn any client website into a comprehensive diagnostic report and presentation summary in 10 seconds.
                 </p>
                 <div className="acts">
                   <a className="btn" href="/signup">
-                    Start winning clients
+                    Start a Client Audit
                   </a>
                   <a className="ln" href="#report">
                     See the report
@@ -346,13 +345,13 @@ export default function Home() {
                     <div className="pin" style={{ "--t": ".45s", left: "14px", top: "8px" } as CSSVars}>
                       <b>
                         No analytics pixel
-                        <small>Flying blind on ad spend</small>
+                        <small>Tracking coverage is incomplete</small>
                       </b>
                     </div>
                     <div className="pin" style={{ "--t": "1.1s", left: "14px", top: "112px" } as CSSVars}>
                       <b>
                         Vague headline
-                        <small>No offer, no reason to call</small>
+                        <small>Value proposition needs clarity</small>
                       </b>
                     </div>
                     <div className="pin r" style={{ "--t": "1.5s", right: "14px", top: "150px" } as CSSVars}>
@@ -364,7 +363,7 @@ export default function Home() {
                     <div className="pin" style={{ "--t": "2.1s", left: "20px", top: "196px" } as CSSVars}>
                       <b>
                         Weak call to action
-                        <small>About 9 leads lost a month</small>
+                        <small>Primary next step is unclear</small>
                       </b>
                     </div>
                     <div className="pin r" style={{ "--t": "2.8s", right: "14px", bottom: "44px" } as CSSVars}>
@@ -377,7 +376,7 @@ export default function Home() {
                 </div>
                 <div className="stamp">
                   <b>62</b>
-                  <span>/100 · $4,500+ on the table</span>
+                  <span>/100 · Review diagnostic findings</span>
                 </div>
               </div>
             </div>
@@ -405,8 +404,7 @@ export default function Home() {
           <div className="w">
             <h2>The audit used to eat your afternoon.</h2>
             <p className="lead mu">
-              Checking tags, testing speed, taking screenshots, then writing something that doesn&apos;t sound like
-              spam. Here is the same job, two ways.
+              Checking tags, testing speed, and reviewing page structure takes time. Here is the same diagnostic workflow, two ways.
             </p>
             <div className="race">
               <div className="lane">
@@ -414,14 +412,14 @@ export default function Home() {
                 <div className="track t1">
                   <i>About 90 minutes</i>
                 </div>
-                <small>Six tabs, a spreadsheet and a blank email.</small>
+                <small>Multiple tools, notes, and a manually prepared client report.</small>
               </div>
               <div className="lane">
                 <b>With AuditToPitch Pro</b>
                 <div className="track t2">
                   <i></i>
                 </div>
-                <small>10 seconds. Score, issues, PDF and script, done.</small>
+                <small>Diagnostic score, findings, PDF, and presentation summary.</small>
               </div>
             </div>
           </div>
@@ -429,12 +427,12 @@ export default function Home() {
 
         <section className="dark grain" id="route">
           <div className="w">
-            <h2>Eight steps from stranger to signed.</h2>
-            <p className="lead mu">The same route every time, so winning clients stops depending on luck.</p>
+            <h2>Streamline your client audit workflow</h2>
+            <p className="lead mu">A consistent process for diagnosing client websites and preparing clear reports.</p>
             <ol className="route">
               <li>
-                <h3>Find a weak site</h3>
-                <p>A business with a generic website that needs help.</p>
+                <h3>Select a client website</h3>
+                <p>Choose the website submitted by a client for diagnostic review.</p>
               </li>
               <li>
                 <h3>Click the extension</h3>
@@ -449,20 +447,20 @@ export default function Home() {
                 <p>A health score, the issues and what fixing them is worth.</p>
               </li>
               <li>
-                <h3>Generate the pitch</h3>
-                <p>An AI-written Loom script, built from the findings.</p>
+                <h3>Generate audit summary</h3>
+                <p>Create a client-facing summary and presentation walk-through from the findings.</p>
               </li>
               <li>
-                <h3>Record your Loom</h3>
-                <p>Show the problems, explain the cost, offer the fix.</p>
+                <h3>Review the findings</h3>
+                <p>Explain the diagnostic results and discuss recommended actions.</p>
               </li>
               <li>
-                <h3>Send it</h3>
-                <p>Email the video and the PDF to your prospect.</p>
+                <h3>Deliver report</h3>
+                <p>Share the audit PDF and presentation walk-through with your client.</p>
               </li>
               <li>
-                <h3>Close and retain</h3>
-                <p>They book a call, sign, and stay on retainer.</p>
+                <h3>Plan next steps</h3>
+                <p>Use the findings to agree on priorities and appropriate follow-up work.</p>
               </li>
             </ol>
           </div>
@@ -536,7 +534,7 @@ export default function Home() {
                   <div>
                     Health score for brightside-dental.com
                     <br />
-                    <span style={{ color: "#55665c" }}>12 issues · about 23 missed leads a month</span>
+                    <span style={{ color: "#55665c" }}>12 findings · recommended actions for client review</span>
                   </div>
                 </div>
                 <div className="rw">
@@ -552,8 +550,7 @@ export default function Home() {
                   Page structure<span className="tg ps">PASS</span>
                 </div>
                 <div className="pt">
-                  <b>Pitch script:</b> &quot;Hi John, I&apos;m from <span id="ap">{displayName}</span>. I audited your
-                  website and found several things that are likely costing you customers…&quot;
+                  <b>Presentation script:</b> &quot;This diagnostic report summarizes the website findings and recommended next steps for client review…&quot;
                 </div>
               </div>
               <div className="docFooter">
@@ -577,7 +574,7 @@ export default function Home() {
             <div className="calc">
               <div>
                 <label htmlFor="n" style={{ fontSize: "18px", fontWeight: 600 }}>
-                  Prospect sites audited per month
+                  Client websites audited per month
                 </label>
                 <div className="big" style={{ marginTop: "14px" }}>
                   <span id="nv">{audits}</span>
@@ -645,8 +642,8 @@ export default function Home() {
                 <ul>
                   <li>Everything in Starter</li>
                   <li>Whitelabel PDF with your logo</li>
-                  <li>AI Loom scripts</li>
-                  <li>Cold email drafts</li>
+                  <li>Video presentation scripts</li>
+                  <li>Client summary reports</li>
                 </ul>
                 <a className="btn" href="/signup?plan=pro">
                   Choose Pro
@@ -660,7 +657,7 @@ export default function Home() {
               <details>
                 <summary>How do I run an audit?</summary>
                 <p style={{ color: "#55665c" }}>
-                  Open a prospect&apos;s site, click the extension in Chrome and press Activate Audit.
+                  Open a client website, click the extension in Chrome, and start the audit.
                 </p>
               </details>
               <details>
@@ -678,8 +675,8 @@ export default function Home() {
         </section>
 
         <section className="dark grain end">
-          <h2>Your next client already has a broken website.</h2>
-          <p className="mu">Install the extension, scan one site, send one pitch.</p>
+          <h2>Build a clear diagnostic view of every client website.</h2>
+          <p className="mu">Analyze client websites, prepare presentation summaries, and share white-label reports.</p>
           <a className="btn" href="/signup">
             Get AuditToPitch Pro
           </a>
@@ -693,7 +690,7 @@ export default function Home() {
                   AuditToPitch<b>Pro</b>
                 </span>
               </a>
-              <span>Audit websites. Generate pitches. Win clients.</span>
+              <span>Client diagnostics. Clear reporting. White-label presentation.</span>
               <nav className="legal" aria-label="Legal">
                 <a href="/privacy">Privacy Policy</a>
                 <a href="/terms">Terms of Service</a>

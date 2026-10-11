@@ -14,7 +14,7 @@ const sections = [
 				<p>When you use AuditToPitch Pro, we collect information needed to provide and maintain the service:</p>
 				<ul>
 					<li><strong>Account details:</strong> your email address and account identifier, managed through Supabase Authentication.</li>
-					<li><strong>Audit information:</strong> website URLs you submit, page details collected for the audit, and the resulting findings and pitch scripts. Audit results are saved to your account.</li>
+					<li><strong>Audit information:</strong> client website URLs you submit, page details collected for the diagnostic, and resulting findings, presentation scripts, and summary reports. Audit results are saved to your account.</li>
 					<li><strong>Payment information:</strong> subscription and transaction metadata, such as plan status and provider identifiers. Paddle processes payments as our merchant of record; we do not store full payment card details.</li>
 				</ul>
 			</>
@@ -24,7 +24,7 @@ const sections = [
 		title: '2. How We Process Audits',
 		content: (
 			<p>
-				When you request an audit, the submitted URL and relevant page information are processed by automated AI models, including Google Gemini, to generate website performance findings and a pitch script. We use this information to provide the requested audit. We do not sell submitted audit data or use it to train public AI models.
+				When you request an audit, the submitted URL and relevant page information are processed by automated AI models, including Google Gemini, to generate website diagnostic findings and a client presentation script. We use this information to provide the requested audit. We do not sell submitted audit data or use it to train public AI models.
 			</p>
 		),
 	},
@@ -50,7 +50,7 @@ const sections = [
 			<ul>
 				<li><strong>Supabase:</strong> account authentication, database, and saved audit storage.</li>
 				<li><strong>Vercel:</strong> website hosting and serverless functions.</li>
-				<li><strong>Google Gemini API:</strong> AI processing for audit findings and pitch scripts.</li>
+				<li><strong>Google Gemini API:</strong> AI processing for diagnostic findings and client presentation scripts.</li>
 				<li><strong>Paddle:</strong> subscription checkout, payment processing, and billing as merchant of record.</li>
 			</ul>
 		),

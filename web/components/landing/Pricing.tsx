@@ -13,10 +13,11 @@ const FREE_FEATURES = [
 
 const PRO_FEATURES = [
 	'Unlimited Website Audits',
-	'Client Presentation Script & Audit Walkthrough Guide',
+	'Video Presentation Scripts',
 	'PDF Executive Summary Export',
 	'Priority Support',
 	'Chrome Extension Access',
+	'Client Summary Reports',
 ]
 
 export function Pricing() {

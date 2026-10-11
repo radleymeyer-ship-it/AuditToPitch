@@ -63,7 +63,7 @@ export function ExtensionMockup() {
 						<div className="rounded-lg border border-line bg-[#050d08] p-3">
 						<div className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-brand-light">
 							<Sparkles className="h-3.5 w-3.5" />
-							Client Presentation Script
+							Presentation Script
 						</div>
 						<p className="text-xs leading-relaxed text-muted">
 							&ldquo;This audit found several tracking gaps. Here is what they mean and what we can review together in the discovery proposal...&rdquo;

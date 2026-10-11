@@ -46,15 +46,14 @@ const aiResultSchema = z.object({
 
 type AiResult = z.infer<typeof aiResultSchema>
 
-const SYSTEM_PROMPT = `You are a blunt, expert website auditor working for a digital marketing agency that pitches cold leads. \
-Given structured metadata scraped from a prospect's website, you must:
+const SYSTEM_PROMPT = `You are an expert website auditor preparing inbound client diagnostic and reporting materials. The client or their representative requested the audit. Given structured metadata from the client website, you must:
 1. Score the site's overall marketing/technical health from 0-100 (overall_score).
 2. List the concrete flaws you found (flaws_found), e.g. missing meta description, no analytics tracking, missing alt text, no schema markup, weak SEO tags, etc.
-3. Write a 60-second cold pitch video script (video_script) formatted in Markdown with exactly these sections, in order: [Hook], [The Problem], [The Solution], [Call to Action]. Keep it conversational, punchy, and speakable in ~60 seconds.
+3. Write a concise client presentation script (video_script) for explaining the requested website diagnostic, formatted in Markdown with exactly these sections, in order: [Audit Overview], [Key Findings], [Recommended Actions], [Client Discussion]. Keep it factual, collaborative, and suitable for a client summary report. Do not include unsolicited outreach, sales pressure, or unsupported claims.
 4. Write a 2-3 sentence quick_summary of the audit for an internal dashboard.
 5. Write recommended_actions: a string array with exactly one entry per flaws_found item, in the same order. Each entry MUST be a single sentence giving a specific technical remedy tied directly to that finding. Name the exact tag, attribute, or file involved, for example og:image, JSON-LD, <link rel="canonical">, <meta name="description">, <h1>, the alt attribute, GA4, or the Meta Pixel. Never use generic or placeholder advice such as "review against page goal", "improve SEO", or "optimize the page".
 
-Punctuation rules for video_script and all other text: always put a single space on both sides of a hyphen or em-dash used as a dash ("word - word", "word — word"); never write "word-word" or "word—word" for a dash. Ordinary hyphenated compound words (for example "cold-call") are fine.
+Punctuation rules for video_script and all other text: always put a single space on both sides of a hyphen or em-dash used as a dash ("word - word", "word — word"); never write "word-word" or "word—word" for a dash. Ordinary hyphenated compound words are fine.
 
 Respond ONLY with a single JSON object with exactly these keys: overall_score (number), flaws_found (string array), video_script (string), quick_summary (string), recommended_actions (string array). Do not include any other keys or commentary.`
 
@@ -76,12 +75,12 @@ function createMockAuditResult(pageAudit: z.infer<typeof pageAuditSchema>): AiRe
 
 	if (!pageAudit.analytics.googleAnalytics4) {
 		findings.push('Google Analytics 4 is not detected')
-		nextSteps.push('Add GA4 and verify key events so campaign traffic can be tied to leads.')
+		nextSteps.push('Add GA4 and verify key events so the client can measure relevant site activity.')
 		score -= 9
 	}
 	if (!pageAudit.analytics.metaPixel) {
 		findings.push('Meta Pixel is not detected')
-		nextSteps.push('Install the Meta Pixel and configure conversion events for paid campaigns.')
+		nextSteps.push('Install the Meta Pixel and configure events required for the client’s measurement plan.')
 		score -= 9
 	}
 	if (!pageAudit.analytics.googleTagManager) {
@@ -129,19 +128,19 @@ function createMockAuditResult(pageAudit: z.infer<typeof pageAuditSchema>): AiRe
 
 	const subject = pageAudit.title || new URL(pageAudit.url).hostname
 	const leadFinding = findings[0] || 'the page has a solid technical baseline'
-	const recommendation = nextSteps[0] || 'review the conversion journey and test how well the page turns visits into enquiries'
+	const recommendation = nextSteps[0] || 'review the site structure and confirm that key visitor journeys are clearly supported'
 	const summary = findings.length
 		? `${findings.length} potential improvement${findings.length === 1 ? '' : 's'} were identified. The strongest starting point is to address ${leadFinding.toLowerCase()}.`
-		: 'No major tracking or metadata gaps were detected. A conversion review can identify opportunities beyond this technical scan.'
+		: 'No major tracking or metadata gaps were detected. A broader client review can identify opportunities beyond this technical scan.'
 
 	return {
 		overall_score: Math.max(35, score),
 		flaws_found: findings.length ? findings : ['No high-impact tracking or metadata gaps detected'],
 		video_script: [
-			`[Hook]\nI took a quick look at ${subject} and noticed ${leadFinding.toLowerCase()}.`,
-			`[The Problem]\n${recommendation} Without clear measurement and a focused page, it is harder to see which marketing efforts are creating real enquiries.`,
-			`[The Solution]\nOur team can help close those gaps, improve the measurement setup, and make the page work harder for your next campaign.`,
-			`[Call to Action]\nWould you be open to a short conversation this week about a few practical improvements?`,
+			`[Audit Overview]\nThe diagnostic review of ${subject} identified ${findings.length} potential improvement${findings.length === 1 ? '' : 's'}.`,
+			`[Key Findings]\nThe primary finding is ${leadFinding.toLowerCase()}.`,
+			`[Recommended Actions]\n${recommendation}`,
+			'[Client Discussion]\nReview the findings with the client, confirm priorities, and outline appropriate next steps.',
 		].join('\n\n'),
 		quick_summary: summary,
 	}

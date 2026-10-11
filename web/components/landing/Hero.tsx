@@ -18,8 +18,7 @@ export function Hero() {
 					</h1>
 
 					<p className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
-						Analyze a client website submitted for review, prepare a discovery proposal from verified findings,
-						and share a polished, white-label report with your agency&apos;s clients.
+						Turn any client website into a comprehensive diagnostic report and presentation summary in 10 seconds.
 					</p>
 
 					<div className="mt-8 flex flex-col gap-3 sm:flex-row">
