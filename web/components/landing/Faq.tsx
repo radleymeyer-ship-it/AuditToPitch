@@ -9,13 +9,13 @@ const FAQS = [
 		answer: 'No, start instantly — no credit card is required for your first 3 audits.',
 	},
 	{
-		question: 'Can my agency sales team share an account?',
-		answer: 'Yes, Pro accounts cover your core pitch team.',
+		question: 'Can my agency team share an account?',
+		answer: 'Yes, Pro accounts support your team as you prepare client audits and presentations.',
 	},
 	{
-		question: 'How does the AI create the video script?',
+		question: 'How does the AI prepare a client presentation script?',
 		answer:
-			'It analyzes scraped technical gaps and maps them to high-converting agency sales angles.',
+			'It summarizes findings from the requested client-site audit and organizes them into a clear walkthrough for a discovery proposal.',
 	},
 ]
 

@@ -8,12 +8,12 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client'
 const FREE_FEATURES = [
 	'3 Full Website Audits',
 	'Chrome Extension Access',
-	'Basic AI Scripting',
+	'Client Presentation Script',
 ]
 
 const PRO_FEATURES = [
 	'Unlimited Website Audits',
-	'Full AI Pitch Script Generator',
+	'Client Presentation Script & Audit Walkthrough Guide',
 	'PDF Executive Summary Export',
 	'Priority Support',
 	'Chrome Extension Access',
@@ -63,7 +63,7 @@ export function Pricing() {
 						Simple, agency-friendly pricing
 					</h2>
 					<p className="mt-4 text-lg text-muted">
-						Start free. Upgrade when you&apos;re ready to pitch at scale.
+						Start free. Upgrade for more client-site audits and white-label reporting.
 					</p>
 					{checkoutError && <p className="mt-4 text-sm text-alert" role="alert">{checkoutError}</p>}
 				</div>

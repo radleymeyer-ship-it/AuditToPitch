@@ -258,7 +258,7 @@ export function downloadAuditPdf({ audit, score, findings, recommendations, quic
 		y += 14
 	}
 
-	writeSectionTitle('Personalized pitch script')
+	writeSectionTitle('Client Presentation Script')
 	const pitchLines = getLines(pitchScript, contentWidth - 26, 9, false)
 	const pitchHeight = Math.max(46, pitchLines.length * 13 + 22)
 	ensureSpace(pitchHeight + 8)
@@ -280,7 +280,7 @@ export function downloadAuditPdf({ audit, score, findings, recommendations, quic
 		pdf.setFont('helvetica', 'normal')
 		pdf.setFontSize(7)
 		pdf.setTextColor(...COLORS.muted)
-		pdf.text('AUDITTOPITCH PRO  |  CONFIDENTIAL PROSPECT REPORT', margin, pageHeight - 17)
+		pdf.text('AUDITTOPITCH PRO  |  CONFIDENTIAL CLIENT REPORT', margin, pageHeight - 17)
 		pdf.text(`${page} / ${pageCount}`, pageWidth - margin, pageHeight - 17, { align: 'right' })
 	}
 

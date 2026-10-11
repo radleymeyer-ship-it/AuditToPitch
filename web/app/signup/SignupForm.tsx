@@ -127,7 +127,7 @@ export function SignupForm() {
 						<>
 							<p className="text-xs font-semibold uppercase text-brand-light">Start with 3 free audits</p>
 							<h1 className="mt-3 text-3xl font-bold text-ink">Create your account</h1>
-							<p className="mt-2 text-sm leading-relaxed text-muted">No card required. Set up your workspace to start auditing prospects.</p>
+							<p className="mt-2 text-sm leading-relaxed text-muted">No card required. Set up your workspace to analyze requested client sites.</p>
 
 							<form className="mt-7 space-y-5" onSubmit={handleSubmit}>
 								<div>

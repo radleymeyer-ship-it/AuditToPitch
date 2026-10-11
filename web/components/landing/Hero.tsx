@@ -12,14 +12,14 @@ export function Hero() {
 					</span>
 
 					<h1 className="mt-6 max-w-2xl text-5xl font-bold leading-[1.04] text-ink sm:text-6xl">
-						Find the gaps.
+						Inbound Site Audits.
 						<br />
-						<span className="text-brand-light">Start the conversation.</span>
+						<span className="text-brand-light">Clear Client Presentations.</span>
 					</h1>
 
 					<p className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
-						Audit a prospect&apos;s site for missing tracking and SEO signals. Turn real findings
-						into a personalized pitch script your agency can use to start a sales conversation.
+						Analyze a client website submitted for review, prepare a discovery proposal from verified findings,
+						and share a polished, white-label report with your agency&apos;s clients.
 					</p>
 
 					<div className="mt-8 flex flex-col gap-3 sm:flex-row">

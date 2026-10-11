@@ -98,7 +98,7 @@ export function LoginForm() {
 				<section className="mt-10 rounded-lg border border-line bg-surface/90 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.35)] sm:p-8">
 					<p className="text-xs font-semibold uppercase text-brand-light">Agency workspace</p>
 					<h1 className="mt-3 text-3xl font-bold text-ink">Welcome back</h1>
-					<p className="mt-2 text-sm leading-relaxed text-muted">Sign in to continue to your audits and pitch scripts.</p>
+					<p className="mt-2 text-sm leading-relaxed text-muted">Sign in to continue to your client-site audits and presentation scripts.</p>
 
 					<form className="mt-7 space-y-5" onSubmit={handleSubmit}>
 						<div>

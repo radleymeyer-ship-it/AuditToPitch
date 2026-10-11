@@ -14,8 +14,8 @@ export default function SuccessPage() {
 				</p>
 
 				<p className="mt-4 text-sm leading-relaxed text-zinc-500">
-					Open your AuditToPitch Chrome extension on any website to generate your AI
-					video pitch scripts.
+					Open your AuditToPitch Chrome extension on a requested client website to prepare
+					a client presentation script and white-label audit report.
 				</p>
 
 				<Link

@@ -17,7 +17,7 @@ export function ExtensionMockup() {
 					<span className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
 					<span className="h-2.5 w-2.5 rounded-full bg-green-400" />
 					<span className="ml-3 truncate rounded bg-[#030806] px-2 py-0.5 text-xs text-muted">
-						prospect-agency.com
+						client-website.com
 					</span>
 				</div>
 
@@ -63,10 +63,10 @@ export function ExtensionMockup() {
 						<div className="rounded-lg border border-line bg-[#050d08] p-3">
 						<div className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-brand-light">
 							<Sparkles className="h-3.5 w-3.5" />
-							Personalized pitch script
+							Client Presentation Script
 						</div>
 						<p className="text-xs leading-relaxed text-muted">
-							&ldquo;I noticed a few tracking gaps on your site that could make it harder to see which campaigns are working...&rdquo;
+							&ldquo;This audit found several tracking gaps. Here is what they mean and what we can review together in the discovery proposal...&rdquo;
 						</p>
 					</div>
 				</div>

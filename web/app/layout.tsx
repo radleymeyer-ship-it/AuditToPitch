@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-   title: "AuditToPitch Pro — Audit Websites. Generate Pitches. Win More Clients.",
+   title: "Inbound Site Audit & Client Presentation Tool | AuditToPitch Pro",
   description:
-    "Scan any website for missing pixels, SEO gaps, and DOM errors, then let AI write your 60-second cold pitch video script.",
+    "An inbound site audit and client presentation tool for agencies and freelancers. Analyze requested client sites, prepare discovery proposals, and create white-label reports.",
   icons: { icon: "/brand-mark.png", shortcut: "/brand-mark.png", apple: "/brand-mark.png" },
 };
 

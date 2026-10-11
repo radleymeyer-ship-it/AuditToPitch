@@ -9,9 +9,9 @@ const FEATURES = [
 	},
 	{
 		icon: Sparkles,
-		title: 'Personalized Pitch Script Generator',
+		title: 'Client Presentation Script',
 		description:
-			'Turns the issues found on a prospect site into a concise, tailored outreach script.',
+			'Turn findings from a requested client-site audit into a concise presentation script for a discovery proposal.',
 	},
 	{
 		icon: FileText,
@@ -20,8 +20,8 @@ const FEATURES = [
 	},
 	{
 		icon: History,
-		title: 'Unlimited Pitch History & Client Tracking',
-		description: 'Keep every audit and script organized so nothing falls through the cracks.',
+		title: 'Audit History & Client Reporting',
+		description: 'Keep client-site audits and white-label reports organized in one workspace.',
 	},
 ]
 
@@ -31,10 +31,10 @@ export function Features() {
 			<div className="mx-auto max-w-6xl px-6">
 				<div className="mx-auto max-w-2xl text-center">
 					<h2 className="text-3xl font-bold text-ink sm:text-4xl">
-						Everything you need to close more deals
+						Inbound Site Audit & Client Presentation Tool
 					</h2>
 					<p className="mt-4 text-lg text-muted">
-						Built for agency owners who pitch cold leads every day.
+						A practical website-audit and client-presentation workspace for agencies and freelancers.
 					</p>
 				</div>
 

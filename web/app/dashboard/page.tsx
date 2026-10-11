@@ -34,9 +34,9 @@ function scoreColor(score: number) {
 	return 'var(--red)'
 }
 
-function extractHook(script: string | null) {
+function extractOverview(script: string | null) {
 	if (!script) return ''
-	const match = script.match(/\[Hook\]\s*([\s\S]*?)(?:\n\s*\[|$)/i)
+	const match = script.match(/\[Audit Overview\]\s*([\s\S]*?)(?:\n\s*\[|$)/i)
 	return (match?.[1] ?? script).trim()
 }
 
@@ -82,24 +82,24 @@ export default async function DashboardPage() {
 
 				<section className={styles.hero}>
 					<h1>
-						Their site is leaking leads.<br />
-						<span className={styles.hl}>Audit any site in 10 sec.</span>
+						Client Site Audit<br />
+						<span className={styles.hl}>Ready for presentation.</span>
 					</h1>
 					<div className={styles.timer} aria-hidden="true"><s>90 min</s>00:10</div>
-					<p className={styles.sub}>Open a prospect&apos;s site, run the audit, and walk away with a PDF and a Loom script.</p>
+					<p className={styles.sub}>Analyze a requested client site, prepare a discovery proposal, and create a white-label report with a client presentation script.</p>
 				</section>
 
 				<main className={styles.grid}>
 					<section className={`${styles.card} ${styles.dark} ${styles.ext}`}>
 						<div>
 							<h2>Connect the Chrome extension</h2>
-							<p style={{ marginTop: 8 }}>Install it, sign in, and audit any prospect&apos;s site in one click.</p>
+							<p style={{ marginTop: 8 }}>Install it, sign in, and audit the client site requested for review.</p>
 							<a className={styles.btn} href={EXTENSION_URL} target="_blank" rel="noopener noreferrer">
 								Download / Connect Chrome extension
 							</a>
 						</div>
 						<div className={styles.browser} aria-hidden="true">
-							<div className={styles.dots}><i /><i /><i /><span>prospect-website.com</span></div>
+							<div className={styles.dots}><i /><i /><i /><span>client-website.com</span></div>
 							<div className={styles.bar} />
 							<div className={`${styles.bar} ${styles.barShort}`} />
 							<div className={styles.scan} />
@@ -129,7 +129,7 @@ export default async function DashboardPage() {
 					<section className={styles.plan}>
 						<div>
 							<h2>Unlimited audits.<br />Zero waiting.</h2>
-							<p>{isPro ? 'You\u2019re on Pro. Keep pitching.' : 'Upgrade from the free beta to keep pitching.'}</p>
+							<p>{isPro ? 'You\u2019re on Pro. Prepare more client audits and reports.' : 'Upgrade from the free beta for more client audits and reports.'}</p>
 						</div>
 						{!isPro && <UpgradeButton />}
 					</section>
@@ -156,15 +156,15 @@ export default async function DashboardPage() {
 					</section>
 
 					<section className={`${styles.card} ${styles.dark} ${styles.col}`}>
-						<h2>▶ AI pitch scripts</h2>
+						<h2>▶ Client presentation scripts</h2>
 						{recentAudits.length === 0 ? (
-							<p className={styles.empty}>Generated pitch scripts will appear here.</p>
+							<p className={styles.empty}>Client presentation scripts will appear here.</p>
 						) : (
 							recentAudits.map((audit) => (
 								<div className={styles.q} key={audit.id}>
 									<b>{hostLabel(audit.url)}</b>
-									<span className={styles.hook}>Hook</span>
-									<p>&ldquo;{extractHook(audit.video_script)}&rdquo;</p>
+									<span className={styles.hook}>Audit overview</span>
+									<p>&ldquo;{extractOverview(audit.video_script)}&rdquo;</p>
 								</div>
 							))
 						)}

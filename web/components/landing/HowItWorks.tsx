@@ -4,7 +4,7 @@ const STEPS = [
 	{
 		icon: Download,
 		title: 'Install & Open',
-		description: "Install the Chrome extension and open any prospect's website.",
+			description: 'Open the client website requested for an audit in Chrome.',
 	},
 	{
 		icon: ScanSearch,
@@ -14,9 +14,9 @@ const STEPS = [
 	},
 	{
 		icon: Video,
-		title: 'Pitch & Close',
+		title: 'Prepare a Client Presentation',
 		description:
-			'Use a prospect-specific pitch script to start a useful conversation with the client.',
+			'Build a discovery proposal and audit walkthrough guide from the site findings.',
 	},
 ]
 
@@ -29,7 +29,7 @@ export function HowItWorks() {
 						How It Works
 					</h2>
 					<p className="mt-4 text-lg text-muted">
-						From open tab to closed deal in three steps.
+						From requested site to client-ready discovery proposal in three steps.
 					</p>
 				</div>
 
