@@ -128,7 +128,6 @@ function App({ onAccountClick }: PopupProps) {
   const [selectedVoiceUri, setSelectedVoiceUri] = useState('')
   const [voicePreferenceLoaded, setVoicePreferenceLoaded] = useState(false)
   const [auditPdfExporter, setAuditPdfExporter] = useState<AuditPdfExporter | null>(null)
-  const [auditPdfLogo, setAuditPdfLogo] = useState<string | null>(null)
   const [isLoadingPdfEngine, setIsLoadingPdfEngine] = useState(false)
 
   useEffect(() => {
@@ -252,6 +251,9 @@ function App({ onAccountClick }: PopupProps) {
 
       setAudit(pageAudit)
       setGeneratedAudit(result)
+      if (activeTab?.url && chrome.storage?.local) {
+        void chrome.storage.local.set({ [`audit_${activeTab.url}`]: { audit: pageAudit, generatedAudit: result } })
+      }
       if (result.free_audits_remaining !== null) {
         setFreeAuditsRemaining(result.free_audits_remaining)
       }
@@ -268,6 +270,18 @@ function App({ onAccountClick }: PopupProps) {
       setActiveTab(currentTab ?? null)
     })
   }, [])
+
+  useEffect(() => {
+    const url = activeTab?.url
+    if (!url || typeof chrome === 'undefined' || !chrome.storage?.local) return
+    const key = `audit_${url}`
+    chrome.storage.local.get(key, (items) => {
+      const saved = items[key] as { audit: PageAudit; generatedAudit: GeneratedAudit } | undefined
+      if (!saved?.audit || !saved.generatedAudit) return
+      setAudit((current) => current ?? saved.audit)
+      setGeneratedAudit((current) => current ?? saved.generatedAudit)
+    })
+  }, [activeTab?.url])
 
   useEffect(() => () => {
     window.speechSynthesis?.cancel()
@@ -392,9 +406,7 @@ function App({ onAccountClick }: PopupProps) {
 
     setIsLoadingPdfEngine(true)
     void import('./utils/auditPdf')
-      .then(async ({ downloadAuditPdf, loadAuditLogo }) => {
-        const logoDataUrl = await (loadAuditLogo as AuditPdfLogoLoader)()
-        setAuditPdfLogo(logoDataUrl)
+      .then(({ downloadAuditPdf }) => {
         setAuditPdfExporter(() => downloadAuditPdf)
       })
       .catch(() => setError('Could not load the PDF exporter. Please try again.'))
@@ -407,13 +419,15 @@ function App({ onAccountClick }: PopupProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [audit])
 
-  const exportPdf = () => {
+  const exportPdf = async () => {
     if (!audit) return
     if (!auditPdfExporter) {
       setError('PDF exporter is still loading. Please try again.')
       return
     }
     try {
+      const { loadAuditLogo } = await import('./utils/auditPdf')
+      const logoDataUrl = await (loadAuditLogo as AuditPdfLogoLoader)(audit.url)
       auditPdfExporter({
         audit,
         score: reportScore,
@@ -421,7 +435,7 @@ function App({ onAccountClick }: PopupProps) {
         recommendations: generatedAudit?.recommended_actions,
         quickSummary: generatedAudit?.quick_summary || 'Audit summary is not available.',
         presentationScript,
-        logoDataUrl: auditPdfLogo,
+        logoDataUrl,
       })
       setError('')
     } catch {

@@ -27,25 +27,23 @@ function printableText(value: string) {
 		.replace(/\s*[\u2013\u2014]\s*/g, ' - ')
 }
 
-export async function loadAuditLogo(): Promise<string | null> {
+async function fetchAsPngDataUrl(url: string): Promise<string | null> {
 	let objectUrl: string | null = null
 	try {
-		const response = await fetch('/brand-wordmark.png')
+		const response = await fetch(url)
 		if (!response.ok) return null
 		const blob = await response.blob()
 		objectUrl = URL.createObjectURL(blob)
 		const image = new Image()
 		await new Promise<void>((resolve, reject) => {
 			image.onload = () => resolve()
-			image.onerror = () => reject(new Error('Could not load the report logo'))
+			image.onerror = () => reject(new Error('Could not load the logo'))
 			image.src = objectUrl as string
 		})
 
-		const maxWidth = 800
-		const scale = Math.min(1, maxWidth / image.naturalWidth)
 		const canvas = document.createElement('canvas')
-		canvas.width = Math.round(image.naturalWidth * scale)
-		canvas.height = Math.round(image.naturalHeight * scale)
+		canvas.width = image.naturalWidth || 128
+		canvas.height = image.naturalHeight || 128
 		const context = canvas.getContext('2d')
 		if (!context) return null
 		context.drawImage(image, 0, 0, canvas.width, canvas.height)
@@ -55,6 +53,23 @@ export async function loadAuditLogo(): Promise<string | null> {
 	} finally {
 		if (objectUrl) URL.revokeObjectURL(objectUrl)
 	}
+}
+
+// Fetched via blob so the canvas is never tainted by cross-origin data.
+export async function loadAuditLogo(pageUrl: string, faviconUrl?: string | null): Promise<string | null> {
+	let hostname: string
+	try {
+		hostname = new URL(pageUrl).hostname
+	} catch {
+		return null
+	}
+	const candidates = [faviconUrl, `https://www.google.com/s2/favicons?domain=${encodeURIComponent(hostname)}&sz=128`]
+	for (const candidate of candidates) {
+		if (!candidate) continue
+		const dataUrl = await fetchAsPngDataUrl(candidate)
+		if (dataUrl) return dataUrl
+	}
+	return null
 }
 
 function recommendationForFinding(finding: string): string {
@@ -128,14 +143,16 @@ export function downloadAuditPdf({ audit, score, findings, recommendations, quic
 
 	pdf.setFillColor(3, 8, 6)
 	pdf.rect(0, 0, pageWidth, 142, 'F')
+	const clientName = printableText(audit.title || new URL(audit.url).hostname)
+	let textX = margin
 	if (logoDataUrl) {
-		pdf.addImage(logoDataUrl, 'PNG', margin, 13, 150, 30)
-	} else {
-		pdf.setFont('helvetica', 'bold')
-		pdf.setFontSize(10)
-		pdf.setTextColor(149, 255, 197)
-		pdf.text('AUDITTOPITCH PRO', margin, 33)
+		pdf.addImage(logoDataUrl, 'PNG', margin, 14, 30, 30)
+		textX = margin + 40
 	}
+	pdf.setFont('helvetica', 'bold')
+	pdf.setFontSize(12)
+	pdf.setTextColor(245, 255, 248)
+	pdf.text(pdf.splitTextToSize(clientName, pageWidth - margin - textX)[0] as string, textX, 34)
 	pdf.setFont('helvetica', 'normal')
 	pdf.setFontSize(8)
 	pdf.setTextColor(174, 195, 182)
@@ -145,7 +162,7 @@ export function downloadAuditPdf({ audit, score, findings, recommendations, quic
 	pdf.setFontSize(20)
 	pdf.setTextColor(245, 255, 248)
 	pdf.text('Executive website audit', margin, 88)
-	const titleLines = pdf.splitTextToSize(printableText(audit.title || audit.url), contentWidth)
+	const titleLines = pdf.splitTextToSize(printableText(audit.url), contentWidth)
 	pdf.setFont('helvetica', 'normal')
 	pdf.setFontSize(9)
 	pdf.setTextColor(205, 220, 211)
