@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import OpenAI from 'openai'
+import { openai } from '@/lib/openai/client'
 import { createSupabaseServiceClient } from '@/lib/supabase/server'
 import { FREE_AUDIT_LIMIT, getAuditUsage } from '@/lib/audit-quota'
 import { extensionCorsHeaders, extensionOptions } from '@/lib/extension-cors'
@@ -226,17 +226,13 @@ async function handleAudit(request: NextRequest) {
 	if (useMockAudit) {
 		result = createMockAuditResult(pageAudit)
 	} else {
-		if (!process.env.GEMINI_API_KEY) {
-			return respond(request, { error: 'Missing GEMINI_API_KEY in environment' }, 500)
+		if (!process.env.OPENAI_API_KEY) {
+			return respond(request, { error: 'Missing OPENAI_API_KEY in environment' }, 500)
 		}
-		const openai = new OpenAI({
-			apiKey: process.env.GEMINI_API_KEY,
-			baseURL: 'https://generativelanguage.googleapis.com/v1beta/openai/',
-		})
 		let completion
 		try {
 			completion = await openai.chat.completions.create({
-				model: 'gemini-3.8-flash',
+				model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
 				response_format: { type: 'json_object' },
 				temperature: 0.7,
 				messages: [
@@ -254,7 +250,7 @@ async function handleAudit(request: NextRequest) {
 				return respond(
 					request,
 					{
-						error: 'The AI service rejected its API key. Update GEMINI_API_KEY in web/.env.local and restart the web server.',
+						error: 'The AI service rejected its API key. Update OPENAI_API_KEY in web/.env.local and restart the web server.',
 						code: 'OPENAI_AUTH_FAILED',
 					},
 					503
@@ -265,14 +261,14 @@ async function handleAudit(request: NextRequest) {
 				return respond(
 					request,
 					{
-						error: 'The AI service rate or usage limit was reached. Check your Gemini usage and limits.',
+						error: 'The AI service rate or usage limit was reached. Check your OpenAI usage and credits.',
 						code: 'OPENAI_LIMIT_REACHED',
 					},
 					503
 				)
 			}
 
-			console.error('Gemini request failed:', error)
+			console.error('OpenAI request failed:', error)
 			const detail = error instanceof Error ? error.message : 'Failed to generate audit'
 			return respond(request, { error: `Failed to generate audit: ${detail}` }, 502)
 		}
